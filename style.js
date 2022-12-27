@@ -68,7 +68,8 @@ const styles = StyleSheet.create({
       },
       shadowOpacity: 0.25,
       shadowRadius: 4,
-      elevation: 5
+      elevation: 5,
+      height: 600
     },
     button: {
         borderRadius: 20,
@@ -83,6 +84,19 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center"
     },
+    item:{
+        width:'80%',
+        flexDirection:'row',
+        marginVertical:20,
+        justifyContent:'space-around',
+        alignItems:'center'
+    },
+    it1:{
+        flex:2
+    },
+    it1:{
+        flex:1
+    }
   });
   
   export default styles;
