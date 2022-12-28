@@ -33,7 +33,7 @@ const Footer = ({
             style={{
               width: 230,
               height: 70,
-              backgroundColor: COLORS.primaryColor,
+              backgroundColor: COLORS.white,
               borderRadius: SIZES.padding / 1.3,
               justifyContent: "center",
               alignItems: "center",
@@ -45,7 +45,9 @@ const Footer = ({
               });
             }}
           >
-            <Text style={{ color: COLORS.white, ...FONTS.body2 }}>Suivant</Text>
+            <Text style={{ color: COLORS.primaryColor, ...FONTS.body2 }}>
+              Suivant
+            </Text>
           </TouchableOpacity>
         </View>
       )}
@@ -62,7 +64,7 @@ const Footer = ({
             style={{
               width: 230,
               height: 70,
-              backgroundColor: COLORS.primaryColor,
+              backgroundColor: COLORS.white,
               borderRadius: SIZES.padding / 1.3,
               justifyContent: "center",
               alignItems: "center",
@@ -71,7 +73,12 @@ const Footer = ({
               navigation.replace("SignIn");
             }}
           >
-            <Text style={{ color: COLORS.white, ...FONTS.body2 }}>
+            <Text
+              style={{
+                color: COLORS.primaryColor,
+                ...FONTS.h2,
+              }}
+            >
               Démarrer
             </Text>
           </TouchableOpacity>
@@ -87,6 +94,7 @@ const Footer = ({
               fontWeight: "400",
               textDecorationLine: "underline",
               textDecorationStyle: "dashed",
+              color: "white",
             }}
           >
             Sauter
@@ -112,7 +120,7 @@ const Dots = (scrollX) => {
       {onboards?.onboards?.map((item, index) => {
         const dotColor = dotPosition.interpolate({
           inputRange: [index - 1, index, index + 1],
-          outputRange: ["#ccc", COLORS.primaryColor, "#ccc"],
+          outputRange: [COLORS.gray, COLORS.white, COLORS.gray],
           extrapolate: "clamp",
         });
 

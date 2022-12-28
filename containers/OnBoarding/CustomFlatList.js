@@ -106,14 +106,28 @@ const renderFlatListItem = (
 
           {/* Title */}
           <View style={styles.titleContainer}>
-            <Text style={{ ...FONTS.h1, width: 300, textAlign: "center" }}>
+            <Text
+              style={{
+                ...FONTS.h1,
+                width: 300,
+                textAlign: "center",
+                color: "white",
+              }}
+            >
               {item.title}
             </Text>
           </View>
 
           {/* Text */}
           <View style={styles.titleContainer}>
-            <Text style={{ ...FONTS.body3, width: 250, textAlign: "center" }}>
+            <Text
+              style={{
+                ...FONTS.body3,
+                width: 250,
+                textAlign: "center",
+                color: "white",
+              }}
+            >
               {item.text}
             </Text>
           </View>

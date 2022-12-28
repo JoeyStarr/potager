@@ -33,7 +33,7 @@ const SignUp = ({ navigation }) => {
   const [emailError, setEmailError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
 
-  const addUser = async () => {
+  const addUser = async (uid) => {
     try {
       const docRef = await addDoc(collection(db, "users"), {
         email: email,
@@ -41,7 +41,7 @@ const SignUp = ({ navigation }) => {
         name: username,
         number: "",
         prename: "",
-        uid: uuid.v4(),
+        uid: uid,
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -54,7 +54,7 @@ const SignUp = ({ navigation }) => {
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        addUser().then(() => {
+        addUser(userCredential?.user?.uid).then(() => {
           // Signed in && created
           const user = userCredential.user;
           navigation.navigate("SignIn");
