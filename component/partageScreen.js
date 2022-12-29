@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
+import SelectDropdown from 'react-native-select-dropdown'
 import styles from "../style";
+import { getAuth } from "firebase/auth"
+import { db } from "../config/firebase";
+import { collection, addDoc, doc, getDocs } from "firebase/firestore";
 import Ionic from "react-native-vector-icons/Ionicons";
 import {
   Text,
@@ -14,8 +18,16 @@ import {
 const Partage = ({ navigation }) => {
   const [produit, setProduit] = useState("");
   const [quantite, setQuantite] = useState();
+  const [data,setData] = useState([])
   const [prix, setPrix] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
+
+  const reset= () => {
+    setPrix(null)
+    setProduit("")
+    setQuantite(null)
+  }
 
   const Item = ({ id, title }) => (
     <View style={styles.item}>
@@ -37,9 +49,38 @@ const Partage = ({ navigation }) => {
     </View>
   );
 
-  const onPressFunction2 = () => {
-    return;
+  const onPressFunction2 = async() => {
+    const auth = getAuth();
+    const uid = auth.currentUser.uid
+    try {
+      const docRef = await addDoc(collection(db, "offer"), {
+        idSeller: uid,
+        img: "",
+        price: prix,
+        product: produit,
+        quantity: quantite
+      });
+      console.log("Document written with ID: ", docRef.id);
+      reset()
+      setModalVisible2(true)
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+
   };
+
+  useEffect(() => {
+    const getPro = async() =>{
+      const dat = await getDocs(collection(db,"listProduct"))
+      console.log(dat)
+      setData(dat.docs.map((doc) => ({...doc.data(), id: doc.id})))
+    }
+    console.log(data)
+    getPro()
+  },[])
+
+  const countries = ["Egypt", "Canada", "Australia", "Ireland"]
+
   const DATA = [
     {
       id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
@@ -113,12 +154,44 @@ const Partage = ({ navigation }) => {
             </View>
           </View>
         </Modal>
-        <TextInput
-          style={styles.input}
-          placeholder="Produit"
-          placeholderTextColor="#FFFFFF"
-          onChangeText={(text) => setProduit(text)}
-          value={produit}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible2}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible2(!modalVisible2);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView2}>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible2(!modalVisible2)}
+              >
+                <Text style={styles.textStyle}>Fermez</Text>
+              </Pressable>
+              <Text style={{textAlign:'center',fontSize:20,color:'green',marginVertical:'2%',marginTop:10}}>Offre publier avec succès</Text>
+            </View>
+          </View>
+        </Modal>
+        <SelectDropdown
+          labelId="option"
+          data={data.name}
+          onSelect={(selectedItem, index) => {
+            setProduit(selectedItem)
+            console.log(produit)
+          }}
+          buttonTextAfterSelection={(selectedItem, index) => {
+            // text represented after item is selected
+            // if data array is an array of objects then return selectedItem.property to render after item is selected
+            return selectedItem
+          }}
+          rowTextForSelection={(item, index) => {
+            // text represented for each item in dropdown
+            // if data array is an array of objects then return item.property to represent item in dropdown
+            return item
+          }}
         />
         <TextInput
           style={styles.input}
@@ -136,7 +209,7 @@ const Partage = ({ navigation }) => {
           keyboardType="numeric"
           value={prix}
         />
-        <Pressable onPress={() => onPressFunction2()} style={styles.pressbutt}>
+        <Pressable onPress={onPressFunction2} style={styles.pressbutt}>
           <Text style={{ fontSize: 16, color: "white" }}>Valider</Text>
         </Pressable>
       </View>

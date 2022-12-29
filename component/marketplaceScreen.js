@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "../style";
+import { db } from "../config/firebase";
+import { collection, doc, getDocs } from "firebase/firestore";
 import Ionic from "react-native-vector-icons/Ionicons";
 import {
   Text,
@@ -12,11 +14,10 @@ import {
   FlatList,
   VirtualizedList,
 } from "react-native";
+import { async } from "@firebase/util";
 
 const Product = ({ product }) => {
-  console.log(product);
   const { id, name, price } = product;
-  console.log(name);
   return (
     <View style={styles.card3}>
       <Pressable>
@@ -39,8 +40,37 @@ const Product = ({ product }) => {
   );
 };
 
+const Product2 = ({ product2 }) => {
+  const { id, name, price, img, product, quantity } = product2;
+  return (
+    <View style={styles.card3}>
+      <Pressable>
+        <Image
+          source={{uri:img}}
+          style={{ width: 150, height: 150 }}
+        />
+      </Pressable>
+      <Text style={{ fontSize: 20, color: "black" }}>{name}</Text>
+      <View style={styles.bottom2}>
+        <View>
+          <Text style={{ color: "black" }}>{price} FCA</Text>
+          <Text>l'unité</Text>
+        </View>
+        <Pressable style={styles.circle}>
+          <Ionic name="add-outline" size="22" color="white" />
+        </Pressable>
+      </View>
+    </View>
+  );
+};
+
 const Marketplace = () => {
   const [search, setSearch] = useState("");
+  const [list,setList] = useState([])
+  const [data,setData] = useState([{
+    "id": "1",
+    "title": "All",
+  }])
 
   const DATA = [
     {
@@ -105,13 +135,30 @@ const Marketplace = () => {
     },
   ];
 
+  useEffect(() => {
+    const getPro = async() =>{
+      const dat = await getDocs(collection(db,"product"))
+      setData(dat.docs.map((doc) => ({...doc.data(), id: doc.id})))
+    }
+    getPro()
+
+    const getListProd = async() =>{
+      const dat = await getDocs(collection(db,"offer"))
+      setList(dat.docs.map((doc) => ({...doc.data(), id: doc.id})))
+    }
+    getListProd()
+    console.log(list)
+  },[])
+
+  console.log(data)
+
   const Item = ({ title }) => (
     <View style={styles.row}>
       <Text style={{ fontSize: 18, marginHorizontal: 40 }}>{title}</Text>
     </View>
   );
 
-  const renderItem = ({ item }) => <Item title={item?.title} />;
+  const renderItem = ({ item }) => <Item title={item?.name} />;
 
   const renderItem2 = ({ item }) => (
     <View>
@@ -166,7 +213,7 @@ const Marketplace = () => {
         <View style={styles.bloc1}>
           <Text style={{ fontSize: 24, marginVertical: 10 }}>Nos produits</Text>
           <FlatList
-            data={DATA}
+            data={data}
             renderItem={renderItem}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -175,8 +222,8 @@ const Marketplace = () => {
           <View>
             <FlatList
               numColumns={2}
-              data={DATA2}
-              renderItem={({ item }) => <Product product={item} />}
+              data={list}
+              renderItem={({ item }) => <Product2 product2={item} />}
               keyExtractor={(item, index) => index.toString()}
             />
           </View>
