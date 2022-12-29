@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { SIZES, COLORS, FONTS } from "../../style/index";
 import { icons } from "../../constants";
 
-const Header = ({ userName }) => {
+const Header = ({ userName, navigation }) => {
   return (
     <View style={styles.header}>
       <View style={{ flex: 2, padding: 10 }}>
@@ -18,7 +18,10 @@ const Header = ({ userName }) => {
           Bonjour {userName} 👋
         </Text>
       </View>
-      <TouchableOpacity style={[{ flex: 1 }, styles.__flex]}>
+      <TouchableOpacity
+        style={[{ flex: 1 }, styles.__flex]}
+        onPress={() => navigation.navigate("Profile")}
+      >
         <Image
           source={icons.user}
           resizeMethod="scale"

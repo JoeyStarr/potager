@@ -22,7 +22,7 @@ import Header from "./Home/Header";
 import Card from "./Home/Card";
 import Advices from "./Home/Advices";
 
-const Home = () => {
+const Home = ({navigation}) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [userData, setUserData] = React.useState(null);
   const { user } = useAuth();
@@ -45,7 +45,7 @@ const Home = () => {
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
           {/* HEADER COMPONENT */}
-          <Header userName={userData?.name} />
+          <Header userName={userData?.name} navigation={navigation} />
 
           {/* CARD COMPONENT */}
           <Card isHashSaved={false} />
