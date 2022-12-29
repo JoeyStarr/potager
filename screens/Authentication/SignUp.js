@@ -23,7 +23,11 @@ import { icons, images } from "../../constants";
 import utils from "../../utils";
 
 // UUID generator
+<<<<<<< HEAD
 import uuid from "react-native-uuid";
+=======
+//import uuid from "react-native-uuid";
+>>>>>>> old-state
 
 const SignUp = ({ navigation }) => {
   const [username, setUsername] = React.useState("");

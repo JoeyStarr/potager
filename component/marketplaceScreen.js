@@ -115,7 +115,11 @@ const Marketplace = () => {
 
   const renderItem2 = ({ item }) => (
     <View>
+<<<<<<< HEAD
       <Item2 name={item.name} price={item.price} />
+=======
+      <Item2 name={item?.name} price={item?.price} />
+>>>>>>> old-state
     </View>
   );
 
