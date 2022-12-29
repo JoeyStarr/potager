@@ -19,24 +19,15 @@ import { icons, images } from "../../constants";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 // Google Login
-<<<<<<< HEAD
-import { auth } from "@react-native-firebase/auth";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-=======
 //import { auth } from "@react-native-firebase/auth";
 /* import { GoogleSignin } from "@react-native-google-signin/google-signin";
->>>>>>> old-state
 GoogleSignin.configure({
   iosClientId:
     "130898531440-kav0pn1hakeq4jub4mqko40end7lfl1o.apps.googleusercontent.com",
   webClientId:
     "130898531440-8vcf24jp8p9vpl41fphpt23n8eedq6tm.apps.googleusercontent.com",
   offlineAccess: false,
-<<<<<<< HEAD
-});
-=======
 }); */
->>>>>>> old-state
 
 // Utils for verifying entries in input fields
 import utils from "../../utils";
@@ -71,11 +62,7 @@ const SignIn = ({ navigation }) => {
       });
   };
 
-<<<<<<< HEAD
-  async function onGoogleButtonPress() {
-=======
   /* async function onGoogleButtonPress() {
->>>>>>> old-state
     // Check if your device supports Google Play
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
     // Get the users ID token
@@ -88,11 +75,7 @@ const SignIn = ({ navigation }) => {
     const user = auth().signInWithCredential(googleCredential);
 
     user.then(() => console.log(user)).catch((error) => console.log(error));
-<<<<<<< HEAD
-  }
-=======
   } */
->>>>>>> old-state
 
   return (
     <View style={{ flex: 1, backgroundColor: "#F9FCFF" }}>
@@ -241,11 +224,7 @@ const SignIn = ({ navigation }) => {
                   borderRadius: 100,
                 }}
                 onPress={() => {
-<<<<<<< HEAD
-                  onGoogleButtonPress();
-=======
                   console.log("Google Pressed");
->>>>>>> old-state
                 }}
               >
                 <Image
