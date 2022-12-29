@@ -10,12 +10,18 @@ import {
 import { SIZES, COLORS, FONTS } from "../../style/index";
 import { images, icons } from "../../constants";
 
-const Card = ({ cardData, isHashSaved }) => {
+const Card = ({ cardData, isHashSaved, navigation, userUid, docRef }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={[styles.cardContainer, styles.borderRad]}
         disabled={isHashSaved}
+        onPress={() =>
+          navigation.navigate("HashScreen", {
+            userUid,
+            docRef,
+          })
+        }
       >
         <ImageBackground
           source={images.bg}
@@ -82,7 +88,18 @@ const Card = ({ cardData, isHashSaved }) => {
               </View>
             </View>
           ) : (
-            <></>
+            <View>
+              <Text
+                style={{
+                  color: "white",
+                  ...FONTS.h1,
+                  fontSize: 32,
+                  width: 200,
+                }}
+              >
+                Potager enregistré
+              </Text>
+            </View>
           )}
         </ImageBackground>
       </TouchableOpacity>

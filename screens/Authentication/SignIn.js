@@ -8,6 +8,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 
 // Constants used for styles
@@ -39,13 +40,17 @@ const SignIn = ({ navigation }) => {
   const [error, setError] = React.useState("");
   const [emailError, setEmailError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const signIn = () => {
+    setIsLoading(true);
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
+        setIsLoading(false);
+
         // ...
       })
       .catch((error) => {
@@ -59,6 +64,7 @@ const SignIn = ({ navigation }) => {
         } else {
           setError("");
         }
+        setIsLoading(false);
       });
   };
 
@@ -171,7 +177,10 @@ const SignIn = ({ navigation }) => {
                 onPress={() => signIn()}
               >
                 <Text style={{ color: COLORS.white, ...FONTS.body2 }}>
-                  Connexion
+                  Connexion{" "}
+                  {isLoading === true ? (
+                    <ActivityIndicator size={"small"} color="white" />
+                  ) : null}
                 </Text>
               </TouchableOpacity>
             </View>

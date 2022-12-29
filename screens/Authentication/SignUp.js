@@ -32,6 +32,7 @@ const SignUp = ({ navigation }) => {
   const [hidePassword, setHidePassword] = React.useState(true);
   const [emailError, setEmailError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const addUser = async (uid) => {
     try {
@@ -51,12 +52,14 @@ const SignUp = ({ navigation }) => {
 
   // Authentication with firebase
   const signUp = () => {
+    setIsLoading(true);
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         addUser(userCredential?.user?.uid).then(() => {
           // Signed in && created
           const user = userCredential.user;
+          setIsLoading(false);
           navigation.navigate("SignIn");
         });
 
@@ -65,6 +68,7 @@ const SignUp = ({ navigation }) => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        setIsLoading(false);
         // ..
       });
   };
@@ -182,7 +186,10 @@ const SignUp = ({ navigation }) => {
                   onPress={() => signUp()}
                 >
                   <Text style={{ color: COLORS.white, ...FONTS.body2 }}>
-                    Inscription
+                    Inscription{" "}
+                    {isLoading ? (
+                      <ActivityIndicator size={"small"} color="white" />
+                    ) : null}
                   </Text>
                 </TouchableOpacity>
               </View>

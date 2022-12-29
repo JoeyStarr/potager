@@ -22,7 +22,7 @@ import Header from "./Home/Header";
 import Card from "./Home/Card";
 import Advices from "./Home/Advices";
 
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [userData, setUserData] = React.useState(null);
   const { user } = useAuth();
@@ -34,6 +34,8 @@ const Home = ({navigation}) => {
       getUser(user?.uid).then((data) => {
         setUserData(data);
         setIsLoading(false);
+      }).catch((error) => {
+        console.log(error);
       });
     }
   }, [user]);
@@ -48,10 +50,18 @@ const Home = ({navigation}) => {
           <Header userName={userData?.name} navigation={navigation} />
 
           {/* CARD COMPONENT */}
-          <Card isHashSaved={false} />
+          <Card
+            isHashSaved={userData?.hashPota ? true : false}
+            navigation={navigation}
+            userUid={userData?.uid}
+            docRef={userData?.docRef}
+          />
 
           {/* ADVICES COMPONENTS */}
-          <Advices />
+          <Advices
+            isActive={userData?.hashPota ? true : false}
+            navigation={navigation}
+          />
 
           {/*<Button title="Log Out" onPress={() => signOut(auth)} /> */}
         </ScrollView>

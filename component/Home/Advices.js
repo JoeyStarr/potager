@@ -10,17 +10,65 @@ import {
 import { COLORS, FONTS, SIZES } from "../../style/index";
 import { icons, dummyDatas } from "../../constants";
 
-const Advices = ({ isActive }) => {
+const Advices = ({ isActive, navigation }) => {
   const popularAdvices = dummyDatas.advices.filter(
     (item) => item.countHear > 100
   );
 
-  const newEstAdvices = dummyDatas;
-
-  console.log(popularAdvices);
+  const newEstAdvices = dummyDatas.advices.filter(
+    (item) =>
+      new Date(new Date().getTime() - 5 * 24 * 60 * 60 * 1000) <=
+      new Date(item.createdAt)
+  );
 
   return (
     <View style={styles.container}>
+      {isActive === false ? (
+        <>
+          <View
+            style={{
+              zIndex: 2,
+              height: "100%",
+              width: "100%",
+              position: "absolute",
+              backgroundColor: "white",
+              opacity: 0.7,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          />
+          <View
+            style={{
+              zIndex: 3,
+              height: "100%",
+              width: "100%",
+              position: "absolute",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Image
+              source={icons.lock}
+              style={{
+                width: 100,
+                height: 100,
+              }}
+            />
+            <Text
+              style={{
+                padding: 10,
+                textAlign: "center",
+                marginVertical: 20,
+                ...FONTS.h2,
+              }}
+            >
+              Veuillez saisir votre code potager pour pouvoir accéder à cette
+              section
+            </Text>
+          </View>
+        </>
+      ) : null}
+
       {/* TITLE */}
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Espace Conseils</Text>
@@ -39,16 +87,24 @@ const Advices = ({ isActive }) => {
 
             {/* SECTION CONTENT */}
             <View style={styles.sectionContentContainer}>
-              <FlatList
-                data={popularAdvices}
-                //horizontal
-                numColumns={2}
-                //pagingEnabled
-                //showsHorizontalScrollIndicator={false}
-                //scrollEventThrottle={16}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item, index }) => itemFlatList({ item })}
-              />
+              {popularAdvices?.map((item) =>
+                itemFlatList({ item, navigation })
+              )}
+            </View>
+          </View>
+
+          {/* SECTION NOUVEAUX */}
+          <View style={styles.sectionContainer}>
+            {/* SECTION TITLE */}
+            <View style={styles.sectionTitleContainer}>
+              <View style={styles.sectionTitle}>
+                <Text style={styles.sectionTitleText}>Nouveaux</Text>
+              </View>
+            </View>
+
+            {/* SECTION CONTENT */}
+            <View style={styles.sectionContentContainer}>
+              {newEstAdvices?.map((item) => itemFlatList({ item }))}
             </View>
           </View>
         </>
@@ -57,9 +113,17 @@ const Advices = ({ isActive }) => {
   );
 };
 
-const itemFlatList = ({ item }) => {
+const itemFlatList = ({ item, navigation }) => {
   return (
-    <TouchableOpacity style={styles.itemContainer}>
+    <TouchableOpacity
+      style={styles.itemContainer}
+      key={item?.id}
+      onPress={() =>
+        navigation.navigate("Advice", {
+          advice: item,
+        })
+      }
+    >
       <View
         style={{
           width: "100%",
@@ -70,7 +134,7 @@ const itemFlatList = ({ item }) => {
       >
         {/* Image */}
         <Image
-          source={item.image}
+          source={{ uri: item.imageUrl }}
           resizeMode="cover"
           resizeMethod="resize"
           style={{
@@ -190,7 +254,9 @@ const styles = StyleSheet.create({
     width: "100%",
     marginVertical: 10,
     alignItems: "center",
-    justifyContent: "center",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    padding: 3,
   },
   itemContainer: {
     marginHorizontal: 5,
