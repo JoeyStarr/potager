@@ -1,0 +1,86 @@
+import React from "react";
+import { signOut, getAuth } from "firebase/auth";
+import {
+  Text,
+  View,
+  Button,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
+
+import { useAuth } from "../hooks/useAuth";
+
+// User Calls - Firebase
+import { getUser } from "../firebase/userCalls";
+
+// Style
+import { SIZES, COLORS, FONTS } from "../style/index";
+
+// Components
+import Header from "./Home/Header";
+import Card from "./Home/Card";
+import Advices from "./Home/Advices";
+
+const Home = () => {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [userData, setUserData] = React.useState(null);
+  const { user } = useAuth();
+  const auth = getAuth();
+
+  React.useEffect(() => {
+    setIsLoading(true);
+    if (user) {
+      getUser(user?.uid).then((data) => {
+        setUserData(data);
+        setIsLoading(false);
+      });
+    }
+  }, [user]);
+
+  return (
+    <View style={styles.container}>
+      {isLoading ? (
+        <ActivityIndicator size="large" color={COLORS.primaryColor} />
+      ) : (
+        <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+          {/* HEADER COMPONENT */}
+          <Header userName={userData?.name} />
+
+          {/* CARD COMPONENT */}
+          <Card isHashSaved={false} />
+
+          {/* ADVICES COMPONENTS */}
+          <Advices />
+
+          {/*<Button title="Log Out" onPress={() => signOut(auth)} /> */}
+        </ScrollView>
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  header: {
+    flex: 1,
+    flexDirection: "row",
+    width: SIZES.width,
+    alignItems: "center",
+    justifyContent: "space-around",
+    padding: 10,
+    marginVertical: 10,
+    marginTop: 60,
+  },
+  __flex: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+
+export default Home;
