@@ -12,7 +12,7 @@ const firebaseConfig = {
   projectId: "pota-41600",
   storageBucket: "pota-41600.appspot.com",
   messagingSenderId: "79083343671",
-  appId: "1:79083343671:web:9d1fafc1a0458630a9d4b2",
+  appId: "1:79083343671:web:9d1fafc1a0458630a9d4b2"
 };
 
 // Initialize Firebase
