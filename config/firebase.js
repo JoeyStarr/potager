@@ -7,12 +7,12 @@ import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDT9L3mds7L4QbDLCQ0xlxehYlMAyjAkkY",
-  authDomain: "potager-77cc3.firebaseapp.com",
-  projectId: "potager-77cc3",
-  storageBucket: "potager-77cc3.appspot.com",
-  messagingSenderId: "130898531440",
-  appId: "1:130898531440:web:ab793d78ca8f324f8d90b5",
+  apiKey: "AIzaSyC3r-K8LSMJFJYnJKDzgiULQvIyuGC0K1g",
+  authDomain: "pota-41600.firebaseapp.com",
+  projectId: "pota-41600",
+  storageBucket: "pota-41600.appspot.com",
+  messagingSenderId: "79083343671",
+  appId: "1:79083343671:web:9d1fafc1a0458630a9d4b2"
 };
 
 // Initialize Firebase
