@@ -152,7 +152,7 @@ export default Footer;
 const styles = StyleSheet.create({
   container: {
     width: SIZES.width,
-    height: 130,
+    height: SIZES.height / 6,
     justifyContent: "center",
     alignItems: "center",
   },

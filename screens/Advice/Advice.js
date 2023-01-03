@@ -9,29 +9,99 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { Audio } from "expo-av";
+
+import { getStorage, ref, getDownloadURL, getStream } from "firebase/storage";
 
 import { SIZES, COLORS, FONTS } from "../../style/index";
 import { icons } from "../../constants";
 
 const Advice = ({ navigation, route }) => {
-  const [sound, setSound] = React.useState();
-
   const { advice } = route.params;
 
+  const [sound, setSound] = React.useState(null);
+  const [urlFound, setUrlFound] = React.useState();
+  const [onLoad, setOnLoad] = React.useState(false);
+  const [isPlaying, setIsPlaying] = React.useState(false);
+  const [duration, setDuration] = React.useState(0);
+
+  const storage = getStorage();
+
+  const getDatas = () => {
+    setOnLoad(true);
+    // Obtenir une référence au fichier audio dans Firebase Storage
+    const httpsRef = ref(storage, advice.soundUrl);
+
+    getDownloadURL(httpsRef)
+      .then(async (url) => {
+        // Insert url directly into statement
+        setUrlFound(url);
+        console.log(url);
+        setOnLoad(false);
+      })
+      .catch((error) => {
+        // Handle any errors
+      });
+  };
+
   async function handleAudioPress() {
-    const { sound } = await Audio.Sound.createAsync(
-      require("../../assets/10-erreurs-a-eviter-quand-on-commence-un-potager.mp3"),
-      { shouldPlay: true }
-    );
-    setSound(sound);
-    await sound.playAsync();
+    if (sound === null) {
+      // playing audio
+      const { sound, status } = await Audio.Sound.createAsync(
+        { uri: urlFound },
+        { shouldPlay: true },
+        (status) => console.log(status.positionMillis)
+      );
+      setSound(sound);
+      await sound.playAsync();
+    } else {
+      // resume audio
+      await sound.playAsync();
+    }
+
+    setIsPlaying(true);
   }
+
+  async function pauseAudio() {
+    try {
+      await sound.setStatusAsync({ shouldPlay: false });
+      setIsPlaying(false);
+    } catch (error) {}
+  }
+
+  async function skipBack15() {
+    try {
+      sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
+      //console.log(sound);
+    } catch (error) {}
+  }
+
+  async function skipForward15() {}
+
+  async function stop() {
+    try {
+      await sound.stopAsync();
+    } catch (error) {}
+  }
+  /* 
+  async function getDuration() {
+    try {
+      await sound.durationMillis
+    } catch (error) {
+      
+    }
+  } */
+
+  React.useEffect(() => {
+    getDatas();
+  }, []);
 
   React.useEffect(() => {
     return sound
       ? () => {
+          setSound(null);
           console.log("Unloading Sound");
           sound.unloadAsync();
         }
@@ -99,73 +169,90 @@ const Advice = ({ navigation, route }) => {
             </View>
             {/* CONTROLS BUTTON */}
             <View style={styles.footDetails}>
-              {/* Vitesse */}
-              <TouchableOpacity style={styles.controlButton}>
-                <Image
-                  source={icons.multiply_1x}
-                  style={{
-                    tintColor: "white",
-                    width: "60%",
-                    height: "60%",
-                  }}
-                />
-              </TouchableOpacity>
+              {/* Audio data loading */}
+              {onLoad === true ? (
+                <View>
+                  <ActivityIndicator size={"large"} />
+                </View>
+              ) : (
+                <>
+                  {/* Vitesse */}
+                  <TouchableOpacity style={styles.controlButton}>
+                    <Image
+                      source={icons.multiply_1x}
+                      style={{
+                        tintColor: "white",
+                        width: "60%",
+                        height: "60%",
+                      }}
+                    />
+                  </TouchableOpacity>
 
-              {/* Return 15sec */}
+                  {/* Return 15sec */}
 
-              <TouchableOpacity style={styles.controlButton}>
-                <Image
-                  source={icons.skip_back}
-                  style={{
-                    tintColor: "white",
-                    width: "60%",
-                    height: "60%",
-                  }}
-                />
-              </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.controlButton}
+                    onPress={() => skipBack15()}
+                  >
+                    <Image
+                      source={icons.skip_back}
+                      style={{
+                        tintColor: "white",
+                        width: "60%",
+                        height: "60%",
+                      }}
+                    />
+                  </TouchableOpacity>
 
-              {/* Play/Pause */}
-              <TouchableOpacity
-                style={[
-                  styles.controlButton,
-                  {
-                    backgroundColor: "rgba(255, 255, 255, 0.4)",
-                  },
-                ]}
-              >
-                <Image
-                  source={icons.pause}
-                  style={{
-                    tintColor: "white",
-                    width: "60%",
-                    height: "60%",
-                  }}
-                />
-              </TouchableOpacity>
-              {/* Avance 15sec */}
+                  {/* Play/Pause */}
+                  <TouchableOpacity
+                    style={[
+                      styles.controlButton,
+                      {
+                        backgroundColor: "rgba(255, 255, 255, 0.4)",
+                      },
+                    ]}
+                    onPress={() => {
+                      if (isPlaying === true) {
+                        pauseAudio();
+                      } else handleAudioPress();
+                    }}
+                  >
+                    <Image
+                      source={isPlaying === true ? icons.pause : icons.play}
+                      style={{
+                        tintColor: "white",
+                        width: "60%",
+                        height: "60%",
+                      }}
+                    />
+                  </TouchableOpacity>
+                  {/* Avance 15sec */}
 
-              <TouchableOpacity style={styles.controlButton}>
-                <Image
-                  source={icons.skip_forward}
-                  style={{
-                    tintColor: "white",
-                    width: "60%",
-                    height: "60%",
-                  }}
-                />
-              </TouchableOpacity>
-              {/* Stop */}
+                  <TouchableOpacity style={styles.controlButton}>
+                    <Image
+                      source={icons.skip_forward}
+                      style={{
+                        tintColor: "white",
+                        width: "60%",
+                        height: "60%",
+                      }}
+                    />
+                  </TouchableOpacity>
+                  {/* Stop */}
 
-              <TouchableOpacity style={styles.controlButton}>
-                <Image
-                  source={icons.stop}
-                  style={{
-                    tintColor: "white",
-                    width: "40%",
-                    height: "40%",
-                  }}
-                />
-              </TouchableOpacity>
+                  <TouchableOpacity style={styles.controlButton}>
+                    <Image
+                      source={icons.stop}
+                      style={{
+                        tintColor: "white",
+                        width: "40%",
+                        height: "40%",
+                      }}
+                    />
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
           </View>
 
