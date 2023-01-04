@@ -22,6 +22,7 @@ const Advice = ({ navigation, route }) => {
   const { advice } = route.params;
 
   const [sound, setSound] = React.useState(null);
+  const [soundStatus, setSoundStatus] = React.useState(null);
   const [urlFound, setUrlFound] = React.useState();
   const [onLoad, setOnLoad] = React.useState(false);
   const [isPlaying, setIsPlaying] = React.useState(false);
@@ -38,21 +39,53 @@ const Advice = ({ navigation, route }) => {
       .then(async (url) => {
         // Insert url directly into statement
         setUrlFound(url);
-        console.log(url);
-        setOnLoad(false);
       })
       .catch((error) => {
         // Handle any errors
       });
   };
 
+  const _onPlaybackStatusUpdate = (playbackStatus) => {
+    if (!playbackStatus.isLoaded) {
+      // Update your UI for the unloaded state
+      if (playbackStatus.error) {
+        console.log(
+          `Encountered a fatal error during playback: ${playbackStatus.error}`
+        );
+        // Send Expo team the error on Slack or the forums so we can help you debug!
+      }
+    } else {
+      //setStatus();
+      // Update your UI for the loaded state
+
+      if (playbackStatus.isPlaying) {
+        // Update your UI for the playing state
+      } else {
+        // Update your UI for the paused state
+      }
+
+      if (playbackStatus.isBuffering) {
+        // Update your UI for the buffering state
+      }
+
+      if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
+        // The player has just finished playing and will stop. Maybe you want to play something else?
+      }
+    }
+  };
+
+  /*   React.useEffect(() => {
+    if (sound) {
+      sound.setOnPlaybackStatusUpdate();
+    }
+  }, [sound]);
+ */
   async function handleAudioPress() {
     if (sound === null) {
       // playing audio
-      const { sound, status } = await Audio.Sound.createAsync(
+      const { sound } = await Audio.Sound.createAsync(
         { uri: urlFound },
-        { shouldPlay: true },
-        (status) => console.log(status.positionMillis)
+        { shouldPlay: true }
       );
       setSound(sound);
       await sound.playAsync();
@@ -71,18 +104,51 @@ const Advice = ({ navigation, route }) => {
     } catch (error) {}
   }
 
-  async function skipBack15() {
+  async function skipBack10() {
     try {
-      sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
-      //console.log(sound);
+      const status = await sound.getStatusAsync();
+      const currentPositionMillis = status?.positionMillis;
+      const newPositionMillis =
+        currentPositionMillis >= 10000 ? currentPositionMillis - 10000 : 0;
+      console.log(currentPositionMillis);
+      await sound.setStatusAsync({
+        shouldPlay: false,
+        positionMillis: newPositionMillis,
+      });
+      if (isPlaying) {
+        await sound.playAsync();
+        setIsPlaying(true);
+      } else setIsPlaying(false);
     } catch (error) {}
   }
 
-  async function skipForward15() {}
+  async function skipForward10() {
+    try {
+      const status = await sound.getStatusAsync();
+      const currentPositionMillis = status?.positionMillis;
+      const newPositionMillis =
+        status?.durationMillis - currentPositionMillis <= 10000
+          ? 0
+          : currentPositionMillis + 10000;
+      console.log(status);
+      await sound.setStatusAsync({
+        shouldPlay: false,
+        positionMillis: newPositionMillis,
+      });
+      if (isPlaying) {
+        await sound.playAsync();
+        setIsPlaying(true);
+      } else setIsPlaying(false);
+    } catch (error) {}
+  }
 
   async function stop() {
     try {
-      await sound.stopAsync();
+      await sound.setStatusAsync({
+        shouldPlay: false,
+        positionMillis: 0,
+      });
+      setIsPlaying(false);
     } catch (error) {}
   }
   /* 
@@ -97,6 +163,12 @@ const Advice = ({ navigation, route }) => {
   React.useEffect(() => {
     getDatas();
   }, []);
+
+  React.useEffect(() => {
+    if (sound) {
+      setOnLoad(false);
+    }
+  }, [sound]);
 
   React.useEffect(() => {
     return sound
@@ -192,7 +264,7 @@ const Advice = ({ navigation, route }) => {
 
                   <TouchableOpacity
                     style={styles.controlButton}
-                    onPress={() => skipBack15()}
+                    onPress={() => skipBack10()}
                   >
                     <Image
                       source={icons.skip_back}
@@ -227,9 +299,12 @@ const Advice = ({ navigation, route }) => {
                       }}
                     />
                   </TouchableOpacity>
-                  {/* Avance 15sec */}
+                  {/* Avance 10sec */}
 
-                  <TouchableOpacity style={styles.controlButton}>
+                  <TouchableOpacity
+                    style={styles.controlButton}
+                    onPress={() => skipForward10()}
+                  >
                     <Image
                       source={icons.skip_forward}
                       style={{
@@ -241,7 +316,10 @@ const Advice = ({ navigation, route }) => {
                   </TouchableOpacity>
                   {/* Stop */}
 
-                  <TouchableOpacity style={styles.controlButton}>
+                  <TouchableOpacity
+                    style={styles.controlButton}
+                    onPress={() => stop()}
+                  >
                     <Image
                       source={icons.stop}
                       style={{
