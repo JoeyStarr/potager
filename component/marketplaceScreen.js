@@ -44,7 +44,7 @@ const Product2 = ({ product2 }) => {
   const { id, name, price, img, product, quantity } = product2;
   return (
     <View style={styles.card3}>
-      <Pressable>
+      <Pressable >
         <Image
           source={{uri:img}}
           style={{ width: 150, height: 150 }}
