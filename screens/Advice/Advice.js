@@ -18,6 +18,8 @@ import { getStorage, ref, getDownloadURL, getStream } from "firebase/storage";
 import { SIZES, COLORS, FONTS } from "../../style/index";
 import { icons } from "../../constants";
 
+import Slider from "@react-native-community/slider";
+
 const Advice = ({ navigation, route }) => {
   const { advice } = route.params;
 
@@ -26,7 +28,8 @@ const Advice = ({ navigation, route }) => {
   const [urlFound, setUrlFound] = React.useState();
   const [onLoad, setOnLoad] = React.useState(false);
   const [isPlaying, setIsPlaying] = React.useState(false);
-  const [duration, setDuration] = React.useState(0);
+  const [currentPosition, setcurrentPosition] = React.useState(0);
+  const [timeAudio, setTimeAudio] = React.useState(0);
 
   const storage = getStorage();
 
@@ -39,6 +42,13 @@ const Advice = ({ navigation, route }) => {
       .then(async (url) => {
         // Insert url directly into statement
         setUrlFound(url);
+        const { sound } = await Audio.Sound.createAsync({ uri: url });
+        setSound(sound);
+        console.log("Sound mounted");
+
+        const status = await sound.getStatusAsync();
+        setSoundStatus(status);
+        console.log("Sound status", status);
       })
       .catch((error) => {
         // Handle any errors
@@ -46,48 +56,36 @@ const Advice = ({ navigation, route }) => {
   };
 
   const _onPlaybackStatusUpdate = (playbackStatus) => {
-    if (!playbackStatus.isLoaded) {
-      // Update your UI for the unloaded state
-      if (playbackStatus.error) {
-        console.log(
-          `Encountered a fatal error during playback: ${playbackStatus.error}`
-        );
-        // Send Expo team the error on Slack or the forums so we can help you debug!
-      }
-    } else {
-      //setStatus();
-      // Update your UI for the loaded state
+    if (playbackStatus.isPlaying) {
+      console.log("---");
+      console.log(
+        soundStatus !== null &&
+          playbackStatus?.positionMillis / soundStatus?.durationMillis
+      );
+      console.log("---");
 
-      if (playbackStatus.isPlaying) {
-        // Update your UI for the playing state
-      } else {
-        // Update your UI for the paused state
-      }
-
-      if (playbackStatus.isBuffering) {
-        // Update your UI for the buffering state
-      }
-
-      if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
-        // The player has just finished playing and will stop. Maybe you want to play something else?
-      }
+      setcurrentPosition(playbackStatus?.positionMillis);
+    }
+    if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
     }
   };
 
-  /*   React.useEffect(() => {
-    if (sound) {
-      sound.setOnPlaybackStatusUpdate();
+  const calculateSeebBar = () => {
+    if (currentPosition !== null && soundStatus?.durationMillis !== null) {
+      return currentPosition / soundStatus?.durationMillis;
     }
-  }, [sound]);
- */
+
+    /* if (currentAudio.lastPosition) {
+      return currentAudio.lastPosition / (currentAudio.duration * 1000);
+    } */
+
+    return 0;
+  };
+
   async function handleAudioPress() {
     if (sound === null) {
       // playing audio
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: urlFound },
-        { shouldPlay: true }
-      );
-      setSound(sound);
+
       await sound.playAsync();
     } else {
       // resume audio
@@ -151,14 +149,15 @@ const Advice = ({ navigation, route }) => {
       setIsPlaying(false);
     } catch (error) {}
   }
-  /* 
-  async function getDuration() {
-    try {
-      await sound.durationMillis
-    } catch (error) {
-      
-    }
-  } */
+
+  function millisToMinutesAndSeconds(millis) {
+    var minutes = Math.floor(millis / 60000);
+    var seconds = ((millis % 60000) / 1000).toFixed(0);
+
+    return seconds == 60
+      ? minutes + 1 + ":00"
+      : minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+  }
 
   React.useEffect(() => {
     getDatas();
@@ -166,6 +165,7 @@ const Advice = ({ navigation, route }) => {
 
   React.useEffect(() => {
     if (sound) {
+      sound.setOnPlaybackStatusUpdate(_onPlaybackStatusUpdate);
       setOnLoad(false);
     }
   }, [sound]);
@@ -222,7 +222,7 @@ const Advice = ({ navigation, route }) => {
               <View
                 style={{
                   width: "75%",
-                  height: "50%",
+                  height: 200,
                   justifyContent: "center",
                   alignItems: "center",
                   borderRadius: 20,
@@ -239,15 +239,15 @@ const Advice = ({ navigation, route }) => {
                 {advice.title}
               </Text>
             </View>
-            {/* CONTROLS BUTTON */}
-            <View style={styles.footDetails}>
-              {/* Audio data loading */}
-              {onLoad === true ? (
-                <View>
-                  <ActivityIndicator size={"large"} />
-                </View>
-              ) : (
-                <>
+            {/* Audio data loading */}
+            {onLoad === true ? (
+              <View>
+                <ActivityIndicator size={"large"} />
+              </View>
+            ) : (
+              <>
+                {/* CONTROLS BUTTON */}
+                <View style={styles.footDetails}>
                   {/* Vitesse */}
                   <TouchableOpacity style={styles.controlButton}>
                     <Image
@@ -329,9 +329,45 @@ const Advice = ({ navigation, route }) => {
                       }}
                     />
                   </TouchableOpacity>
-                </>
-              )}
-            </View>
+                </View>
+
+                {/* SLIDER */}
+                <View style={styles.sliderContainer}>
+                  <Slider
+                    style={{ width: "100%" }}
+                    minimumValue={0}
+                    maximumValue={1}
+                    minimumTrackTintColor="#FFFFFF"
+                    maximumTrackTintColor={COLORS.gray}
+                    value={0}
+                    onValueChange={(value) => {
+                      console.log(value);
+                    }}
+                  />
+                  <View style={styles.timerContainer}>
+                    <Text
+                      style={{
+                        ...FONTS.body3,
+                        color: "white",
+                        fontWeight: "500",
+                      }}
+                    >
+                      {millisToMinutesAndSeconds(currentPosition)}
+                    </Text>
+
+                    <Text
+                      style={{
+                        ...FONTS.body3,
+                        color: "white",
+                        fontWeight: "500",
+                      }}
+                    >
+                      {millisToMinutesAndSeconds(soundStatus?.durationMillis)}
+                    </Text>
+                  </View>
+                </View>
+              </>
+            )}
           </View>
 
           {/* FOOTER */}
@@ -386,7 +422,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   header: {
-    marginTop: 40,
+    marginTop: 30,
     flexDirection: "row",
     width: SIZES.width,
     alignItems: "center",
@@ -398,7 +434,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 1,
-    padding: 20,
+    padding: 10,
   },
   headDetails: {
     flex: 3,
@@ -406,10 +442,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   footDetails: {
-    flex: 1,
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
+    height: 120,
   },
   controlButton: {
     width: "18%",
@@ -417,5 +453,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 100,
+  },
+  sliderContainer: {
+    padding: 10,
+  },
+  timerContainer: {
+    width: "100%",
+    flexDirection: "row",
+    padding: 5,
+    justifyContent: "space-between",
   },
 });
