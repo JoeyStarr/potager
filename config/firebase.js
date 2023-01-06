@@ -13,7 +13,7 @@ const firebaseConfig = {
   projectId: "newpota-adf00",
   storageBucket: "newpota-adf00.appspot.com",
   messagingSenderId: "514391001700",
-  appId: "1:514391001700:web:458006502d6798211ced71"
+  appId: "1:514391001700:web:458006502d6798211ced71",
 };
 
 // Initialize Firebase

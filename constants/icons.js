@@ -13,6 +13,7 @@ const code = require("../assets/icons/code.png");
 const lock = require("../assets/icons/lock.png");
 const chevron_left = require("../assets/icons/chevron_left.png");
 
+const play = require("../assets/icons/play.png");
 const pause = require("../assets/icons/pause.png");
 const stop = require("../assets/icons/stop.png");
 const skip_back = require("../assets/icons/skip_back.png");
@@ -36,6 +37,7 @@ export default {
   lock,
   chevron_left,
 
+  play,
   stop,
   skip_back,
   skip_forward,
