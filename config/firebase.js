@@ -8,13 +8,12 @@ import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyC3r-K8LSMJFJYnJKDzgiULQvIyuGC0K1g",
-  authDomain: "pota-41600.firebaseapp.com",
-  projectId: "pota-41600",
-  storageBucket: "pota-41600.appspot.com",
-  messagingSenderId: "79083343671",
-  appId: "1:79083343671:web:9d1fafc1a0458630a9d4b2",
-  storageBucket: "gs://pota-41600.appspot.com/",
+  apiKey: "AIzaSyA8-0zbdXjvH-sSSadZUoWonyRss8Wh1y0",
+  authDomain: "newpota-adf00.firebaseapp.com",
+  projectId: "newpota-adf00",
+  storageBucket: "newpota-adf00.appspot.com",
+  messagingSenderId: "514391001700",
+  appId: "1:514391001700:web:458006502d6798211ced71",
 };
 
 // Initialize Firebase

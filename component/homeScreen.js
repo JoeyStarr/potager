@@ -31,12 +31,16 @@ const Home = ({ navigation }) => {
   React.useEffect(() => {
     setIsLoading(true);
     if (user) {
-      getUser(user?.uid).then((data) => {
-        setUserData(data);
-        setIsLoading(false);
-      }).catch((error) => {
-        console.log(error);
-      });
+      if (userData === null) {
+        getUser(user?.uid)
+          .then((data) => {
+            setUserData(data);
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     }
   }, [user]);
 

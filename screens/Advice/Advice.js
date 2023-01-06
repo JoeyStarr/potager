@@ -3,17 +3,13 @@ import {
   Text,
   View,
   StyleSheet,
-  Button,
   Image,
   ImageBackground,
-  TouchableWithoutFeedback,
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
 } from "react-native";
 import { Audio } from "expo-av";
-
-import { getStorage, ref, getDownloadURL, getStream } from "firebase/storage";
 
 import { SIZES, COLORS, FONTS } from "../../style/index";
 import { icons } from "../../constants";
@@ -25,61 +21,58 @@ const Advice = ({ navigation, route }) => {
 
   const [sound, setSound] = React.useState(null);
   const [soundStatus, setSoundStatus] = React.useState(null);
-  const [urlFound, setUrlFound] = React.useState();
   const [onLoad, setOnLoad] = React.useState(false);
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [currentPosition, setcurrentPosition] = React.useState(0);
-  const [timeAudio, setTimeAudio] = React.useState(0);
+  const [slideValue, setSlideValue] = React.useState(0);
+  const [rateStep, setRateStep] = React.useState(0);
 
-  const storage = getStorage();
-
-  const getDatas = () => {
+  const getDatas = async () => {
     setOnLoad(true);
-    // Obtenir une référence au fichier audio dans Firebase Storage
-    const httpsRef = ref(storage, advice.soundUrl);
 
-    getDownloadURL(httpsRef)
-      .then(async (url) => {
-        // Insert url directly into statement
-        setUrlFound(url);
-        const { sound } = await Audio.Sound.createAsync({ uri: url });
-        setSound(sound);
-        console.log("Sound mounted");
+    const { sound } = await Audio.Sound.createAsync({ uri: advice?.soundUrl });
+    setSound(sound);
+    console.log("Sound mounted");
 
-        const status = await sound.getStatusAsync();
-        setSoundStatus(status);
-        console.log("Sound status", status);
-      })
-      .catch((error) => {
-        // Handle any errors
-      });
+    const status = await sound.getStatusAsync();
+    setSoundStatus(status);
+    console.log("Sound status", status);
   };
 
   const _onPlaybackStatusUpdate = (playbackStatus) => {
-    if (playbackStatus.isPlaying) {
-      console.log("---");
-      console.log(
-        soundStatus !== null &&
-          playbackStatus?.positionMillis / soundStatus?.durationMillis
-      );
-      console.log("---");
+    if (!playbackStatus.isLoaded) {
+      // Update your UI for the unloaded state
+      if (playbackStatus.error) {
+        console.log(
+          `Encountered a fatal error during playback: ${playbackStatus.error}`
+        );
+        // Send Expo team the error on Slack or the forums so we can help you debug!
+      }
+    } else {
+      // Update your UI for the loaded state
 
-      setcurrentPosition(playbackStatus?.positionMillis);
+      if (playbackStatus.isPlaying) {
+        setSlideValue(
+          currentPosition !== null && soundStatus?.durationMillis !== null
+            ? playbackStatus.positionMillis / playbackStatus?.durationMillis
+            : playbackStatus.positionMillis /
+                (playbackStatus?.durationMillis * 1000)
+        );
+
+        setcurrentPosition(playbackStatus?.positionMillis);
+      }
+      if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
+        // The player has just finished playing and will stop. Maybe you want to play something else?
+
+        setSlideValue(0);
+        setcurrentPosition(0);
+        setIsPlaying(false);
+      }
+
+      if (playbackStatus.isBuffering) {
+        // Update your UI for the buffering state
+      }
     }
-    if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
-    }
-  };
-
-  const calculateSeebBar = () => {
-    if (currentPosition !== null && soundStatus?.durationMillis !== null) {
-      return currentPosition / soundStatus?.durationMillis;
-    }
-
-    /* if (currentAudio.lastPosition) {
-      return currentAudio.lastPosition / (currentAudio.duration * 1000);
-    } */
-
-    return 0;
   };
 
   async function handleAudioPress() {
@@ -96,10 +89,13 @@ const Advice = ({ navigation, route }) => {
   }
 
   async function pauseAudio() {
+    if (sound === null || isPlaying === false) return;
+
     try {
-      await sound.setStatusAsync({ shouldPlay: false });
-      setIsPlaying(false);
-    } catch (error) {}
+      return await sound.setStatusAsync({ shouldPlay: false });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function skipBack10() {
@@ -117,7 +113,9 @@ const Advice = ({ navigation, route }) => {
         await sound.playAsync();
         setIsPlaying(true);
       } else setIsPlaying(false);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function skipForward10() {
@@ -137,7 +135,9 @@ const Advice = ({ navigation, route }) => {
         await sound.playAsync();
         setIsPlaying(true);
       } else setIsPlaying(false);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function stop() {
@@ -147,7 +147,49 @@ const Advice = ({ navigation, route }) => {
         positionMillis: 0,
       });
       setIsPlaying(false);
+      setSlideValue(0);
+      setcurrentPosition(0);
     } catch (error) {}
+  }
+
+  async function moveAudio(value) {
+    if (sound === null || isPlaying === false) return;
+    console.log(isPlaying);
+
+    try {
+      const status = await sound.setStatusAsync({
+        positionMillis: Math.floor(soundStatus?.durationMillis * value),
+        shouldPlay: true,
+      });
+
+      setSlideValue(Math.floor(soundStatus?.durationMillis * value));
+
+      await sound.playAsync();
+    } catch (error) {
+      console.log("---");
+      console.log(error);
+      console.log("---");
+    }
+  }
+
+  async function acceleration() {
+    try {
+      if (rateStep === 0) {
+        await sound.setStatusAsync({ rate: 1.2, shouldCorrectPitch: true });
+        setRateStep((prev) => prev + 1);
+      } else if (rateStep === 1) {
+        await sound.setStatusAsync({ rate: 1.5, shouldCorrectPitch: true });
+        setRateStep((prev) => prev + 1);
+      } else {
+        await sound.setStatusAsync({
+          rate: 1.0,
+          shouldCorrectPitch: true,
+        });
+        setRateStep(0);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function millisToMinutesAndSeconds(millis) {
@@ -159,8 +201,26 @@ const Advice = ({ navigation, route }) => {
       : minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
   }
 
+  const iconSwitcher = () => {
+    switch (rateStep) {
+      case 0:
+        return icons.multiply_1x;
+
+      case 1:
+        return icons.multiply_1_5x;
+
+      case 2:
+        return icons.multiply_2x;
+
+      default:
+        return icons.multiply_1x;
+    }
+  };
+
   React.useEffect(() => {
-    getDatas();
+    if (sound === null) {
+      getDatas();
+    }
   }, []);
 
   React.useEffect(() => {
@@ -174,6 +234,9 @@ const Advice = ({ navigation, route }) => {
     return sound
       ? () => {
           setSound(null);
+          setIsPlaying(false);
+          setSlideValue(0);
+          setcurrentPosition(0);
           console.log("Unloading Sound");
           sound.unloadAsync();
         }
@@ -249,9 +312,12 @@ const Advice = ({ navigation, route }) => {
                 {/* CONTROLS BUTTON */}
                 <View style={styles.footDetails}>
                   {/* Vitesse */}
-                  <TouchableOpacity style={styles.controlButton}>
+                  <TouchableOpacity
+                    style={styles.controlButton}
+                    onPress={() => acceleration()}
+                  >
                     <Image
-                      source={icons.multiply_1x}
+                      source={iconSwitcher()}
                       style={{
                         tintColor: "white",
                         width: "60%",
@@ -287,6 +353,7 @@ const Advice = ({ navigation, route }) => {
                     onPress={() => {
                       if (isPlaying === true) {
                         pauseAudio();
+                        setIsPlaying(false);
                       } else handleAudioPress();
                     }}
                   >
@@ -339,9 +406,40 @@ const Advice = ({ navigation, route }) => {
                     maximumValue={1}
                     minimumTrackTintColor="#FFFFFF"
                     maximumTrackTintColor={COLORS.gray}
-                    value={0}
-                    onValueChange={(value) => {
-                      console.log(value);
+                    value={slideValue}
+                    onValueChange={async (value) => {
+                      try {
+                        await sound.setStatusAsync({
+                          positionMillis: value * soundStatus?.durationMillis,
+                        });
+                        setcurrentPosition(value * soundStatus?.durationMillis);
+                      } catch (e) {
+                        console.log("-- On Value Change --");
+                        console.error(e);
+                        console.log("-- On Value Change --");
+                      }
+                    }}
+                    onSlidingStart={async () => {
+                      if (!isPlaying) return;
+
+                      try {
+                        await pauseAudio();
+                      } catch (error) {
+                        console.log(
+                          "error inside onSlidingStart callback",
+                          error
+                        );
+                      }
+                    }}
+                    onSlidingComplete={async (value) => {
+                      try {
+                        await moveAudio(value);
+                        //setSlideValue(0);
+                      } catch (e) {
+                        console.log("-- On Sliding Complete --");
+                        console.log(e);
+                        console.log("-- On Sliding Complete --");
+                      }
                     }}
                   />
                   <View style={styles.timerContainer}>
