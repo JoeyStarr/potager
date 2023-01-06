@@ -7,8 +7,17 @@
     "ios": {
       "infoPlist": {
         "UIBackgroundModes": ["audio"]
-      }
-    }
+      },
+      "requireFullScreen": true
+    },
+    "plugins": [
+      [
+        "expo-screen-orientation",
+        {
+          "initialOrientation": "PORTRAIT"
+        }
+      ]
+    ]
   },
   "name": "MyReactNative"
 }
