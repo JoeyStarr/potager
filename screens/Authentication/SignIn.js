@@ -96,10 +96,16 @@ const SignIn = ({ navigation }) => {
               style={{
                 width: 150,
                 height: 150,
-                borderWidth: 1,
                 borderRadius: 100,
+                overflow: "hidden",
+                zIndex: 1,
               }}
-            ></View>
+            >
+              <Image
+                source={require("../../assets/images/djipota-log1.png")}
+                style={{ width: "100%", height: "100%" }}
+              />
+            </View>
           </View>
 
           {/* HEAD */}
@@ -294,7 +300,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#F9FCFF",
+    backgroundColor: "#FFFFFF",
     marginBottom: 20,
   },
   logoContainer: {
