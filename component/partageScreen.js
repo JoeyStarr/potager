@@ -171,6 +171,9 @@ const Partage = ({ navigation }) => {
               >
                 <Text style={styles.textStyle}>Fermez</Text>
               </Pressable>
+              <View>
+              <Ionic name="arrow-back-outline" size="28" colour="black" />
+              </View>
               <Text style={{textAlign:'center',fontSize:20,color:'green',marginVertical:'2%',marginTop:10}}>Offre publier avec succès</Text>
             </View>
           </View>
