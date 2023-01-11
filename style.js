@@ -21,6 +21,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    container2: {
+        flex:1,
+        height:windowHeight,
+        width: windowWidth,
+        backgroundColor: '#00ABB3',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    containerrr: {
+        flex:1,
+        height:windowHeight,
+        width: windowWidth,
+        backgroundColor: '#00ABB3',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     header:{
         flex:1,
         paddingTop: StatusBar.currentHeight,
