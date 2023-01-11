@@ -67,7 +67,7 @@ const Product2 = ({ product2 }) => {
   );
 };
 
-const Market = () => {
+const Market = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [list, setList] = useState([]);
   const [data, setData] = useState([
@@ -212,7 +212,9 @@ const Market = () => {
             <FlatList
               numColumns={2}
               data={DATA1}
-              renderItem={({ item }) => <Product product={item} />}
+              renderItem={({ item }) => (
+                <Product product={item} navigation={navigation} />
+              )}
               keyExtractor={(item, index) => index.toString()}
             />
           </View>
