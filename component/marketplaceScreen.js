@@ -16,7 +16,7 @@ const Marketplace = () => {
       }}
       initialRouteName="Market"
     >
-      <Stack.Screen name="Market" component={Blank} />
+      <Stack.Screen name="Market" component={Market} />
       <Stack.Screen name="Aliment" component={Aliment} />
     </Stack.Navigator>
   );

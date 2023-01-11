@@ -16,14 +16,17 @@ import {
 } from "react-native";
 import { async } from "@firebase/util";
 
-const Product = ({ product,navigation }) => {
+const Product = ({ product, navigation }) => {
   const { id, name, price } = product;
   return (
     <View style={styles.card3}>
-      <Pressable onPress={() => { navigation.navigate("Aliment",{
-        id
-      });}}
-        >
+      <Pressable
+        onPress={() => {
+          navigation.navigate("Aliment", {
+            id,
+          });
+        }}
+      >
         <Image
           source={require("../../assets/tomato.png")}
           style={{ width: 150, height: 150 }}
@@ -47,11 +50,8 @@ const Product2 = ({ product2 }) => {
   const { id, name, price, img, product, quantity } = product2;
   return (
     <View style={styles.card3}>
-      <Pressable >
-        <Image
-          source={{uri:img}}
-          style={{ width: 150, height: 150 }}
-        />
+      <Pressable>
+        <Image source={{ uri: img }} style={{ width: 150, height: 150 }} />
       </Pressable>
       <Text style={{ fontSize: 20, color: "black" }}>{name}</Text>
       <View style={styles.bottom2}>
@@ -67,13 +67,15 @@ const Product2 = ({ product2 }) => {
   );
 };
 
-const Marketplace = () => {
+const Market = () => {
   const [search, setSearch] = useState("");
-  const [list,setList] = useState([])
-  const [data,setData] = useState([{
-    "id": "1",
-    "title": "All",
-  }])
+  const [list, setList] = useState([]);
+  const [data, setData] = useState([
+    {
+      id: "1",
+      title: "All",
+    },
+  ]);
 
   const DATA = [
     {
@@ -138,22 +140,24 @@ const Marketplace = () => {
     },
   ];
 
+  const getPro = async () => {
+    const dat = await getDocs(collection(db, "product"));
+    setData(dat.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  };
+
+  const getListProd = async () => {
+    const dat = await getDocs(collection(db, "offer"));
+    setList(dat.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  };
+
   useEffect(() => {
-    const getPro = async() =>{
-      const dat = await getDocs(collection(db,"product"))
-      setData(dat.docs.map((doc) => ({...doc.data(), id: doc.id})))
-    }
-    getPro()
+    getPro();
 
-    const getListProd = async() =>{
-      const dat = await getDocs(collection(db,"offer"))
-      setList(dat.docs.map((doc) => ({...doc.data(), id: doc.id})))
-    }
-    getListProd()
-    console.log(list)
-  },[])
+    getListProd();
+    console.log(list);
+  }, []);
 
-  console.log(data)
+  console.log(data);
 
   const Item = ({ title }) => (
     <View style={styles.row}>
