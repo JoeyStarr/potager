@@ -15,14 +15,14 @@ import {
   VirtualizedList,
 } from "react-native";
 
-
-const Aliment = ({navigation}) => {
-    return(
-        <View style={styles.containerrr}>
-            <View style={styles.header}>
+const Aliment = ({ route,navigation }) => {
+  console.log(route.params.id)
+  return (
+    <View style={styles.containerrr}>
+      <View style={styles.header}>
         <Pressable
           onPress={() => {
-            navigation.navigate("Accueil");
+            navigation.goBack();
           }}
         >
           <Ionic name="arrow-back-outline" size="28" colour="black" />
@@ -35,7 +35,7 @@ const Aliment = ({navigation}) => {
           />
         </Pressable>
       </View>
-        </View>
-    )
+    </View>
+  );
 };
 export default Aliment;

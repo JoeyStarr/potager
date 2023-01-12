@@ -21,7 +21,9 @@ const Product = ({ product, navigation }) => {
   return (
     <View style={styles.card3}>
       <Pressable
-        onPress={() => navigation.navigate("Aliment")}
+        onPress={() => navigation.navigate("Aliment",{
+          id
+        })}
       >
         <Image
           source={require("../../assets/tomato.png")}
@@ -208,7 +210,7 @@ const Market = ({ navigation }) => {
             <FlatList
               numColumns={2}
               data={DATA1}
-              renderItem={({ item }) => <Product product={item, navigation} />}
+              renderItem={({ item }) => <Product product={item} navigation={navigation}/>}
               keyExtractor={(item, index) => index.toString()}
             />
           </View>
