@@ -6,6 +6,7 @@ import { async } from "@firebase/util";
 import Market from "./MarkT/Market";
 import Aliment from "./MarkT/alimentScreen";
 import Blank from "./MarkT/blank";
+import Cart from "./Cart/Cart";
 
 const Marketplace = () => {
   const Stack = createNativeStackNavigator();
@@ -18,6 +19,7 @@ const Marketplace = () => {
     >
       <Stack.Screen name="Market" component={Market} />
       <Stack.Screen name="Aliment" component={Aliment} />
+      <Stack.Screen name="Cart" component={Cart} />
     </Stack.Navigator>
   );
 };

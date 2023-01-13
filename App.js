@@ -4,6 +4,10 @@ import { StyleSheet, View } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
+// Redux
+import { Provider } from "react-redux";
+import { store } from "./store/store";
+
 // Firebase
 import "./config/firebase";
 
@@ -29,9 +33,11 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
-      <RootNavigation />
-    </View>
+    <Provider store={store}>
+      <View style={styles.container}>
+        <RootNavigation />
+      </View>
+    </Provider>
   );
 }
 
