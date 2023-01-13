@@ -44,18 +44,19 @@ const Product = ({ product, navigation }) => {
   );
 };
 
-const Product2 = ({ product2 }) => {
+const Product2 = ({ product2, navigation }) => {
   const { id, name, price, img, product, quantity } = product2;
   return (
     <View style={styles.card3}>
-      <Pressable>
+      <Pressable onPress={() => navigation.navigate("Aliment",{
+          id:id
+        })}>
         <Image source={{ uri: img }} style={{ width: 150, height: 150 }} />
       </Pressable>
       <Text style={{ fontSize: 20, color: "black" }}>{name}</Text>
       <View style={styles.bottom2}>
         <View>
           <Text style={{ color: "black" }}>{price} FCA</Text>
-          <Text>l'unité</Text>
         </View>
         <Pressable style={styles.circle}>
           <Ionic name="add-outline" size="22" color="white" />
@@ -150,12 +151,10 @@ const Market = ({ navigation }) => {
 
   useEffect(() => {
     getPro();
-
     getListProd();
-    console.log(list);
   }, []);
 
-  console.log(data);
+  console.log(list)
 
   const Item = ({ title }) => (
     <View style={styles.row}>
@@ -228,7 +227,7 @@ const Market = ({ navigation }) => {
             <FlatList
               numColumns={2}
               data={list}
-              renderItem={({ item }) => <Product2 product2={item} />}
+              renderItem={({ item }) => <Product2 product2={item} navigation={navigation}/>}
               keyExtractor={(item, index) => index.toString()}
             />
           </View>

@@ -14,11 +14,15 @@ import {
   Modal,
   FlatList,
 } from "react-native";
+import { async } from "@firebase/util";
 
 const Partage = ({ navigation }) => {
   const [produit, setProduit] = useState("");
-  const [quantite, setQuantite] = useState();
+  const [kilo, setKilo] = useState();
+  const [desc,setDescrp] = useState("");
+  const [mage,setMage] = useState("");
   const [data,setData] = useState([])
+  const [table,setTable] = useState([])
   const [prix, setPrix] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
@@ -26,7 +30,7 @@ const Partage = ({ navigation }) => {
   const reset= () => {
     setPrix(null)
     setProduit("")
-    setQuantite(null)
+    setKilo(null)
   }
 
   const Item = ({ id, title }) => (
@@ -55,10 +59,11 @@ const Partage = ({ navigation }) => {
     try {
       const docRef = await addDoc(collection(db, "offer"), {
         idSeller: uid,
-        img: "",
+        img: mage,
         price: prix,
+        description:desc,
         product: produit,
-        quantity: quantite
+        kilogram: kilo
       });
       console.log("Document written with ID: ", docRef.id);
       reset()
@@ -69,17 +74,30 @@ const Partage = ({ navigation }) => {
 
   };
 
-  useEffect(() => {
-    const getPro = async() =>{
-      const dat = await getDocs(collection(db,"listProduct"))
-      console.log(dat)
-      setData(dat.docs.map((doc) => ({...doc.data(), id: doc.id})))
-    }
-    console.log(data)
-    getPro()
-  },[])
+  const getProd = async () => {
+    const dat = await getDocs(collection(db, "listProduct"));
+    setData(dat.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  };
 
-  const countries = ["Egypt", "Canada", "Australia", "Ireland"]
+  const setInTable = async (data) =>{
+    setTable(data.map((doc) => (doc.nameProduct)))
+  }
+
+  useEffect(() => {
+    getProd()
+  },[])
+  useEffect(() => {
+    setInTable(data)
+  },[data])
+
+  const findertaker = (val) => {
+    const result = data.find(obj => {
+      return obj.nameProduct === val
+    })
+    setMage(result.imgProduct)
+    console.log(mage)
+  }
+
 
   const DATA = [
     {
@@ -180,9 +198,10 @@ const Partage = ({ navigation }) => {
         </Modal>
         <SelectDropdown
           labelId="option"
-          data={data.name}
+          data={table}
           onSelect={(selectedItem, index) => {
             setProduit(selectedItem)
+            findertaker(selectedItem)
             console.log(produit)
           }}
           buttonTextAfterSelection={(selectedItem, index) => {
@@ -200,9 +219,9 @@ const Partage = ({ navigation }) => {
           style={styles.input}
           placeholder="Quantité"
           placeholderTextColor="#FFFFFF"
-          onChangeText={(text) => setQuantite(text)}
+          onChangeText={(text) => setKilo(text)}
           keyboardType="numeric"
-          value={quantite}
+          value={kilo}
         />
         <TextInput
           style={styles.input}
@@ -212,6 +231,15 @@ const Partage = ({ navigation }) => {
           keyboardType="numeric"
           value={prix}
         />
+        <TextInput
+          style={styles.input}
+          placeholder="Ajouter une description"
+          placeholderTextColor="#FFFFFF"
+          onChangeText={setDescrp}
+          keyboardType="text"
+          value={desc}
+        />
+        
         <Pressable onPress={onPressFunction2} style={styles.pressbutt}>
           <Text style={{ fontSize: 16, color: "white" }}>Valider</Text>
         </Pressable>
