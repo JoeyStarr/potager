@@ -17,7 +17,7 @@ import {
 import { async } from "@firebase/util";
 
 const Product = ({ product, navigation }) => {
-  const { id, name, price } = product;
+  const { id, name, price,img } = product;
   return (
     <View style={styles.card3}>
       <Pressable
@@ -26,7 +26,7 @@ const Product = ({ product, navigation }) => {
         })}
       >
         <Image
-          source={require("../../assets/tomato.png")}
+          source={{uri :img }}
           style={{ width: 150, height: 150 }}
         />
       </Pressable>
@@ -45,7 +45,7 @@ const Product = ({ product, navigation }) => {
 };
 
 const Product2 = ({ product2, navigation }) => {
-  const { id, name, price, img, product, quantity } = product2;
+  const { id, name, price, img, product, quantity,kilogram } = product2;
   return (
     <View style={styles.card3}>
       <Pressable onPress={() => navigation.navigate("Aliment",{
@@ -53,10 +53,11 @@ const Product2 = ({ product2, navigation }) => {
         })}>
         <Image source={{ uri: img }} style={{ width: 150, height: 150 }} />
       </Pressable>
-      <Text style={{ fontSize: 20, color: "black" }}>{name}</Text>
+      <Text style={{ fontSize: 20, color: "black" }}>{product}</Text>
       <View style={styles.bottom2}>
         <View>
           <Text style={{ color: "black" }}>{price} FCA</Text>
+          <Text style={{ color: "black" }}>{kilogram} KG</Text>
         </View>
         <Pressable style={styles.circle}>
           <Ionic name="add-outline" size="22" color="white" />
@@ -92,50 +93,6 @@ const Market = ({ navigation }) => {
     {
       id: "4",
       title: "Soja",
-    },
-  ];
-
-  const DATA1 = [
-    {
-      id: "1",
-      title: "All",
-    },
-    {
-      id: "2",
-      title: "Tomate",
-    },
-  ];
-
-  const DATA2 = [
-    {
-      id: "1",
-      name: "Tomate",
-      price: "220",
-    },
-    {
-      id: "2",
-      name: "Salade",
-      price: "160",
-    },
-    {
-      id: "3",
-      name: "Soja",
-      price: "360",
-    },
-    {
-      id: "4",
-      name: "Blé",
-      price: "100",
-    },
-    {
-      id: "5",
-      name: "Soja",
-      price: "360",
-    },
-    {
-      id: "6",
-      name: "Blé",
-      price: "100",
     },
   ];
 
@@ -208,7 +165,7 @@ const Market = ({ navigation }) => {
           <View style={styles.containerBox}>
             <FlatList
               numColumns={2}
-              data={DATA1}
+              data={list}
               renderItem={({ item }) => <Product product={item} navigation={navigation}/>}
               keyExtractor={(item, index) => index.toString()}
             />

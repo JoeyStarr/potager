@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
         height:350,
         justifyContent:'center',
         alignItems:'center',
-        backgroundColor:'lightgrey',
         padding:2,
     },
     headerr:{

@@ -50,7 +50,7 @@ const Aliment = ({ route,navigation }) => {
         </Pressable>
       </View>
         <View style={styles.wimg}>
-          <Image source={{ uri: aliment.img }}/>
+          <Image source={{ uri : aliment.img }} style={{width:'60%',height:'60%'}}/>
         </View>
         <Text style={{fontSize:28,fontWeight:'400'}}>{aliment.product}</Text>
         <Text style={{fontSize:18}}>{aliment.price} CFA</Text>
