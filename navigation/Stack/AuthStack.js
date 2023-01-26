@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import OnBoarding from "../../containers/OnBoarding/OnBoarding";
 import { SignIn, SignUp } from "../../screens/Authentication";
+import Admin from "../../screens/AdminPage/Admin";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ export default function AuthStack() {
 
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="Admin" component={Admin} />
       </Stack.Navigator>
     </NavigationContainer>
   );

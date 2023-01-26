@@ -15,6 +15,8 @@ import {
 import { SIZES, COLORS, FONTS } from "../../style/index";
 
 import { icons, images } from "../../constants";
+import { db } from "../../config/firebase";
+import { getDocs, collection, query, where } from "firebase/firestore";
 
 // Firebase
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
@@ -42,6 +44,21 @@ const SignIn = ({ navigation }) => {
   const [passwordError, setPasswordError] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
+  const [admin,setAdmin] = React.useState([])
+
+   /* const getProd = async () => {
+    const dat = await getDocs(collection(db, "admin"),where("defcon", "==", true));
+    setAdmin(dat.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  }; */ 
+
+  const getAdmin = async() => {
+    const q = query(collection(db, "admin"), where("defcon", "==", true));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      console.log(doc.id, " => ", doc.data());
+    });
+  }
+
   const signIn = () => {
     setIsLoading(true);
     const auth = getAuth();
@@ -49,6 +66,11 @@ const SignIn = ({ navigation }) => {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
+        const ui = user.uid
+        console.log(user.uid);
+        const defc = db.collection('admin').where(`uidAdmin`, '==', ui).get();
+        console.log(defc)
+        getAdmin();
         setIsLoading(false);
 
         // ...
@@ -66,6 +88,8 @@ const SignIn = ({ navigation }) => {
         }
         setIsLoading(false);
       });
+      
+      console.log(admin)
   };
 
   /* async function onGoogleButtonPress() {

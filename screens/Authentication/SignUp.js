@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    marginTop: 40,
+    marginTop: 1,
   },
   headContainer: {
     width: SIZES.width,
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
     height: 55,
     paddingHorizontal: 10,
     fontSize: 15,
-    marginVertical: 15,
+    marginVertical: 12,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
