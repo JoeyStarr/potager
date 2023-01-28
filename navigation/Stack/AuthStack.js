@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import OnBoarding from "../../containers/OnBoarding/OnBoarding";
 import { SignIn, SignUp } from "../../screens/Authentication";
-import Admin from "../../screens/AdminPage/Admin";
+import Admin from "../../screens/AdminPage/Dashboard";
 
 const Stack = createNativeStackNavigator();
 

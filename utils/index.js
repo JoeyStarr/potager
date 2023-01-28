@@ -25,8 +25,8 @@ const validateUsername = (value, setErrorUserNameMsg) => {
 };
 
 const validatePassword = (value, setErrorPasswordMsg) => {
-  if (value?.length < 9) {
-    setErrorPasswordMsg("Le mot de passe doit avoir 9 caractères ou plus");
+  if (value?.length < 6) {
+    setErrorPasswordMsg("Le mot de passe doit avoir 6 caractères ou plus");
   } else setErrorPasswordMsg("");
 };
 
