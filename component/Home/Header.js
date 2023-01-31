@@ -1,10 +1,31 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 
 import { SIZES, COLORS, FONTS } from "../../style/index";
 import { icons } from "../../constants";
+import { signOut, getAuth } from "firebase/auth";
 
 const Header = ({ userName, navigation }) => {
+  const auth = getAuth();
+
+  const authLogout = () => {
+    Alert.alert("DJIPOTA", "Voulez-vous vous déconnecter?", [
+      {
+        text: "Annuler",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "Déconnexion", onPress: () => signOut(auth) },
+    ]);
+  };
+
   return (
     <View style={styles.header}>
       <View style={{ flex: 2, padding: 10 }}>
@@ -20,10 +41,10 @@ const Header = ({ userName, navigation }) => {
       </View>
       <TouchableOpacity
         style={[{ flex: 1 }, styles.__flex]}
-        onPress={() => navigation.navigate("Profile")}
+        onPress={authLogout}
       >
         <Image
-          source={icons.user}
+          source={icons.logout}
           resizeMethod="scale"
           resizeMode="cover"
           style={{

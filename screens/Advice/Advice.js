@@ -14,7 +14,7 @@ import { Audio } from "expo-av";
 import { SIZES, COLORS, FONTS } from "../../style/index";
 import { icons } from "../../constants";
 
-import Slider from "@react-native-community/slider";
+import Slider from '@react-native-community/slider';
 
 const Advice = ({ navigation, route }) => {
   const { advice } = route.params;
@@ -406,6 +406,7 @@ const Advice = ({ navigation, route }) => {
                     maximumValue={1}
                     minimumTrackTintColor="#FFFFFF"
                     maximumTrackTintColor={COLORS.gray}
+                    thumbTintColor="#FFFFFF"
                     value={slideValue}
                     onValueChange={async (value) => {
                       try {

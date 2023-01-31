@@ -2,7 +2,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Pressable,
   TouchableWithoutFeedback,
   Modal,
   Animated,

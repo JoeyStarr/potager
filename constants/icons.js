@@ -22,6 +22,8 @@ const multiply_1x = require("../assets/icons/multiply_1x.png");
 const multiply_1_5x = require("../assets/icons/multiply_1_5x.png");
 const multiply_2x = require("../assets/icons/multiply_2x.png");
 
+const logout = require("../assets/icons/logout.png");
+
 export default {
   cart,
   plant,
@@ -36,6 +38,7 @@ export default {
   count,
   lock,
   chevron_left,
+  logout,
 
   play,
   stop,

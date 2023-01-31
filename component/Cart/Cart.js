@@ -9,6 +9,7 @@ import {
   Image,
   ScrollView,
   Platform,
+  Alert,
 } from "react-native";
 import styles from "../../style";
 import Ionic from "react-native-vector-icons/Ionicons";
@@ -23,11 +24,13 @@ import {
 import { SIZES, FONTS, COLORS } from "../../style/theme";
 import Validate from "./Validate";
 
+// Toast Notification
+import { useToast } from "react-native-toast-notifications";
+
 const Cart = ({ navigation }) => {
   const cart = useSelector((store) => store.cart);
   const [isVisible, setIsVisible] = React.useState(false);
 
-  console.log(cart);
   return (
     <>
       <View
@@ -113,6 +116,7 @@ const Cart = ({ navigation }) => {
 
 const cartItem = ({ item }) => {
   const dispatch = useDispatch();
+  const toast = useToast();
 
   const increment = () => {
     dispatch(incrementQuantity(item.id));
@@ -123,7 +127,33 @@ const cartItem = ({ item }) => {
   };
 
   const remove = () => {
-    dispatch(removeFromCart(item.id));
+    Alert.alert(
+      "DJIPOTA",
+      "Voulez-vous supprimer cet article de votre panier?",
+      [
+        {
+          text: "Annuler",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Supprimer",
+          onPress: () => {
+            dispatch(removeFromCart(item.id));
+            toast.show("DJIPOTA", {
+              type: "custom_toast",
+              placement: "top",
+              duration: 3000,
+              offset: 30,
+              animationType: "slide-in",
+              data: {
+                title: "Produit rétiré du panier ✨",
+              },
+            });
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -183,7 +213,7 @@ const cartItem = ({ item }) => {
             backgroundColor: "black",
             marginHorizontal: 10,
           }}
-          onPress={() => remove()}
+          onPress={remove}
         >
           <Ionic
             name="trash-outline"

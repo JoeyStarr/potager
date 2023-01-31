@@ -13,9 +13,13 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
-  TouchableOpacity,
+  Alert,
 } from "react-native";
-import { async } from "@firebase/util";
+
+import FilterModal from "./FilterModal";
+
+// Toast Notification
+import { useToast } from "react-native-toast-notifications";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -24,6 +28,33 @@ import { addToCart } from "../../store/actions/cartAction";
 
 const Product = ({ product, navigation }) => {
   const dispatch = useDispatch();
+  const toast = useToast();
+
+  const addProductToCart = (product) => {
+    Alert.alert("Djipota", "Voulez-vous ajouter ce produit à votre panier?", [
+      {
+        text: "Annuler",
+        onPress: () => console.log("Cancel pressed"),
+        style: "cancel",
+      },
+      {
+        text: "Ajouter",
+        onPress: () => {
+          dispatch(addToCart(product));
+          toast.show("DJIPOTA", {
+            type: "custom_toast",
+            placement: "top",
+            duration: 3000,
+            offset: 30,
+            animationType: "slide-in",
+            data: {
+              title: "Produit ajouté au panier ✨",
+            },
+          });
+        },
+      },
+    ]);
+  };
 
   const { id, name, price, img } = product;
   return (
@@ -44,14 +75,13 @@ const Product = ({ product, navigation }) => {
       <Text style={{ fontSize: 20, color: "black" }}>{name}</Text>
       <View style={styles.bottom2}>
         <View>
-          <Text style={{ color: "black" }}>{price} FCA</Text>
+          <Text style={{ color: "black" }}>{price} FCFA</Text>
           <Text>l'unité</Text>
         </View>
+
         <Pressable
           style={styles.circle}
-          onPress={() => {
-            dispatch(addToCart(product));
-          }}
+          onPress={() => addProductToCart(product)}
         >
           <Ionic name="add-outline" size="22" color="white" />
         </Pressable>
@@ -62,6 +92,33 @@ const Product = ({ product, navigation }) => {
 
 const Product2 = ({ product2, navigation }) => {
   const dispatch = useDispatch();
+  const toast = useToast();
+
+  const addProductToCart = (product) => {
+    Alert.alert("Djipota", "Voulez-vous ajouter ce produit à votre panier?", [
+      {
+        text: "Annuler",
+        onPress: () => console.log("Cancel pressed"),
+        style: "cancel",
+      },
+      {
+        text: "Ajouter",
+        onPress: () => {
+          dispatch(addToCart(product));
+          toast.show("DJIPOTA", {
+            type: "custom_toast",
+            placement: "top",
+            duration: 3000,
+            offset: 30,
+            animationType: "slide-in",
+            data: {
+              title: "Produit ajouté au panier ✨",
+            },
+          });
+        },
+      },
+    ]);
+  };
 
   const { id, name, price, img, product, quantity, kilogram } = product2;
   return (
@@ -82,13 +139,13 @@ const Product2 = ({ product2, navigation }) => {
       <Text style={{ fontSize: 20, color: "black" }}>{product}</Text>
       <View style={styles.bottom2}>
         <View>
-          <Text style={{ color: "black" }}>{price} FCA</Text>
+          <Text style={{ color: "black" }}>{price} FCFA</Text>
           <Text style={{ color: "black" }}>{kilogram} KG</Text>
         </View>
         <Pressable
           style={styles.circle}
           onPress={() => {
-            dispatch(addToCart(product2));
+            addProductToCart(product);
           }}
         >
           <Ionic name="add-outline" size="22" color="white" />
@@ -113,6 +170,13 @@ const Market = ({ navigation }) => {
       title: "All",
     },
   ]);
+  const [dataProducts, setDataProducts] = React.useState(null);
+
+  // Search state
+  const [isSearching, setIsSearching] = React.useState(false);
+  /// Filter
+  const [isFilterVisible, setFilterVisible] = React.useState(false);
+  const [filterValue, setFilterValue] = React.useState([0, 10000]);
 
   const DATA = [
     {
@@ -140,6 +204,37 @@ const Market = ({ navigation }) => {
     setIsLoading(false);
   };
 
+  const handleSearch = (textSearch, arrayProducts) => {
+    const newArr = arrayProducts.filter((product) =>
+      product?.product?.toLowerCase().includes(textSearch.toLowerCase())
+    );
+
+    return newArr.filter(
+      (product) =>
+        product.price >= filterValue[0] && product.price <= filterValue[1]
+    );
+  };
+
+  useEffect(() => {
+    if (search?.length > 0) {
+      setIsLoading(true);
+      setIsSearching(true);
+      const dataFiltered = handleSearch(search, products);
+      setData(null);
+      setDataProducts(dataFiltered);
+      setIsLoading(false);
+    } else {
+      setIsSearching(false);
+      setDataProducts(products);
+    }
+  }, [search]);
+
+  const onApply = () => {
+    const dataFiltered = handleSearch(search, products);
+    setData(null);
+    setDataProducts(dataFiltered);
+  };
+
   const getListProd = async () => {
     setIsLoading(true);
     if (!products?.length) {
@@ -152,6 +247,10 @@ const Market = ({ navigation }) => {
     getPro();
     getListProd();
   }, []);
+
+  useEffect(() => {
+    setDataProducts(products);
+  }, [products]);
 
   const Item = ({ title }) => (
     <View style={styles.row}>
@@ -169,87 +268,128 @@ const Market = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container3}>
-      {isLoading ? (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      <View style={styles.header2}>
+        <Pressable
+          onPress={() => {
+            navigation.navigate("Accueil");
+          }}
         >
-          <ActivityIndicator size={"large"} />
+          <Ionic name="arrow-back-outline" size="32" colour="black" />
+        </Pressable>
+        <Text style={{ fontSize: 22 }}>Marketplace</Text>
+        <Pressable
+          onPress={() => {
+            navigation.navigate("Cart");
+          }}
+        >
+          <Ionic name="basket-outline" size="32" colour="black" />
+        </Pressable>
+      </View>
+      <View style={styles.conteneurSearchBar}>
+        <View style={styles.searchBar}>
+          <Ionic name="search-outline" size="22" colour="black" />
+          <TextInput
+            style={styles.input2}
+            placeholder="Search"
+            placeholderTextColor="#FFFFFF"
+            onChangeText={setSearch}
+            value={search}
+          />
+          <Pressable
+            onPress={() => {
+              if (search?.length > 0) {
+                setFilterVisible(true);
+              }
+            }}
+          >
+            <Ionic name="options-outline" size="22" colour="black" />
+          </Pressable>
+        </View>
+      </View>
+      {isSearching ? (
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontSize: 24, marginVertical: 10 }}>
+            Résultats pour {`"${search}"`}
+          </Text>
+
+          <View>
+            <FlatList
+              numColumns={2}
+              data={dataProducts}
+              renderItem={({ item }) => (
+                <Product2 product2={item} navigation={navigation} />
+              )}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </View>
+
+          {isFilterVisible === true ? (
+            <FilterModal
+              isVisible={isFilterVisible}
+              setIsVisible={setFilterVisible}
+              filterValue={filterValue}
+              setFilterValue={setFilterValue}
+              onApply={onApply}
+            />
+          ) : null}
         </View>
       ) : (
         <>
-          <View style={styles.header2}>
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Accueil");
-              }}
-            >
-              <Ionic name="arrow-back-outline" size="32" colour="black" />
-            </Pressable>
-            <Text style={{ fontSize: 22 }}>Marketplace</Text>
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Cart");
-              }}
-            >
-              <Ionic name="basket-outline" size="32" colour="black" />
-            </Pressable>
-          </View>
           <ScrollView
             showsVerticalScrollIndicator={false}
             style={styles.scrollView}
           >
-            <View style={styles.conteneurSearchBar}>
-              <View style={styles.searchBar}>
-                <Ionic name="search-outline" size="22" colour="black" />
-                <TextInput
-                  style={styles.input2}
-                  placeholder="Search"
-                  placeholderTextColor="#FFFFFF"
-                  onChangeText={setSearch}
-                  value={search}
-                />
-                <Pressable>
-                  <Ionic name="options-outline" size="22" colour="black" />
-                </Pressable>
+            {isLoading ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <ActivityIndicator size={"large"} />
               </View>
-            </View>
-            <View style={styles.bloc1}>
-              <Text style={{ fontSize: 24, marginVertical: 10 }}>
-                Produit populaire
-              </Text>
-              <View style={styles.containerBox}>
-                <FlatList
-                  numColumns={2}
-                  data={products}
-                  renderItem={({ item }) => (
-                    <Product product={item} navigation={navigation} />
-                  )}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              </View>
-            </View>
-            <View style={styles.bloc1}>
-              <Text style={{ fontSize: 24, marginVertical: 10 }}>
-                Nos produits
-              </Text>
-              <FlatList
-                data={data}
-                renderItem={renderItem}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item) => item.id}
-              />
-              <View>
-                <FlatList
-                  numColumns={2}
-                  data={products}
-                  renderItem={({ item }) => (
-                    <Product2 product2={item} navigation={navigation} />
-                  )}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              </View>
-            </View>
+            ) : (
+              <>
+                <View style={styles.bloc1}>
+                  <Text style={{ fontSize: 24, marginVertical: 10 }}>
+                    Produit populaire
+                  </Text>
+                  <View style={styles.containerBox}>
+                    <FlatList
+                      numColumns={2}
+                      data={dataProducts}
+                      renderItem={({ item }) => (
+                        <Product product={item} navigation={navigation} />
+                      )}
+                      keyExtractor={(item, index) => index.toString()}
+                    />
+                  </View>
+                </View>
+                <View style={styles.bloc1}>
+                  <Text style={{ fontSize: 24, marginVertical: 10 }}>
+                    Nos produits
+                  </Text>
+                  <FlatList
+                    data={data}
+                    renderItem={renderItem}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(item) => item.id}
+                  />
+                  <View>
+                    <FlatList
+                      numColumns={2}
+                      data={dataProducts}
+                      renderItem={({ item }) => (
+                        <Product2 product2={item} navigation={navigation} />
+                      )}
+                      keyExtractor={(item, index) => index.toString()}
+                    />
+                  </View>
+                </View>
+              </>
+            )}
           </ScrollView>
         </>
       )}
