@@ -1,39 +1,47 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styles from "../../style";
-import { db } from "../../config/firebase";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import Ionic from "react-native-vector-icons/Ionicons";
-import {
-  Text,
-  View,
-  ScrollView,
-  Pressable,
-  Image,
-  FlatList,
-  VirtualizedList,
-} from "react-native";
+import { Text, View, ScrollView, Pressable, Image, Alert } from "react-native";
 
 //Redux
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../store/actions/cartAction";
 
+// Toast Notification
+import { useToast } from "react-native-toast-notifications";
+
 const Aliment = ({ route, navigation }) => {
   const dispatch = useDispatch();
-  console.log(route.params.id);
-  const docId = route.params.id;
+  const toast = useToast();
 
-  const [aliment, setAliment] = useState({});
+  const [aliment, setAliment] = useState(route.params.aliment);
   const onPressFunction2 = () => {
-    dispatch(addToCart({ ...aliment, id: route.params.id }));
+    Alert.alert("Djipota", "Voulez-vous ajouter ce produit à votre panier?", [
+      {
+        text: "Annuler",
+        onPress: () => console.log("Cancel pressed"),
+        style: "cancel",
+      },
+      {
+        text: "Ajouter",
+        onPress: () => {
+          dispatch(addToCart({ ...aliment, id: route.params.id }));
+          toast.show("DJIPOTA", {
+            type: "custom_toast",
+            placement: "top",
+            duration: 3000,
+            offset: 30,
+            animationType: "slide-in",
+            data: {
+              title: "Produit ajouté au panier ✨",
+            },
+          });
+        },
+      },
+    ]);
   };
-  useEffect(() => {
-    const docRef = doc(db, "offer", docId);
-    getDoc(docRef).then((doc) => {
-      setAliment(doc.data(), doc.id);
-    });
-  }, []);
 
-  console.log(aliment);
+  const { img, price, description, nameSeller, kilogram, product } = aliment;
 
   return (
     <View style={styles.containerrr}>
@@ -53,14 +61,12 @@ const Aliment = ({ route, navigation }) => {
         </View>
         <View style={styles.wimg}>
           <Image
-            source={{ uri: aliment.img }}
+            source={{ uri: img }}
             style={{ width: "60%", height: "60%" }}
           />
         </View>
-        <Text style={{ fontSize: 28, fontWeight: "400" }}>
-          {aliment.product}
-        </Text>
-        <Text style={{ fontSize: 18 }}>{aliment.price} CFA</Text>
+        <Text style={{ fontSize: 28, fontWeight: "400" }}>{product}</Text>
+        <Text style={{ fontSize: 18 }}>{price} CFA</Text>
         <View
           style={{
             width: "100%",
@@ -69,12 +75,14 @@ const Aliment = ({ route, navigation }) => {
             justifyContent: "center",
           }}
         >
-          <Text style={{ fontSize: 28 }}>{aliment.kilogram} KG</Text>
+          <Text style={{ fontSize: 28 }}>{kilogram} KG</Text>
         </View>
         <Text style={{ fontSize: 22, marginRight: 5, marginBottom: 10 }}>
           Description
         </Text>
-        <Text style={{ fontSize: 18 }}>{aliment.description}</Text>
+        <Text>Vendeur: {nameSeller}</Text>
+
+        <Text style={{ fontSize: 18 }}>{description}</Text>
       </ScrollView>
       <Pressable onPress={onPressFunction2} style={styles.pressbutt}>
         <Text style={{ fontSize: 16, color: "white" }}>Ajouter au panier</Text>

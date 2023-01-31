@@ -32,7 +32,6 @@ const Home = ({ navigation }) => {
   const { user } = useAuth();
   const auth = getAuth();
 
-  console.log(advicesData);
 
   React.useEffect(() => {
     setIsLoading(true);

@@ -56,13 +56,14 @@ const Product = ({ product, navigation }) => {
     ]);
   };
 
-  const { id, name, price, img } = product;
+  const { id, name, price, img, nameSeller } = product;
   return (
     <View style={styles.card3}>
       <Pressable
         onPress={() =>
           navigation.navigate("Aliment", {
             id,
+            aliment: product,
           })
         }
       >
@@ -77,6 +78,7 @@ const Product = ({ product, navigation }) => {
         <View>
           <Text style={{ color: "black" }}>{price} FCFA</Text>
           <Text>l'unité</Text>
+          <Text>Vendeur: {nameSeller}</Text>
         </View>
 
         <Pressable
@@ -120,13 +122,15 @@ const Product2 = ({ product2, navigation }) => {
     ]);
   };
 
-  const { id, name, price, img, product, quantity, kilogram } = product2;
+  const { id, name, price, img, product, quantity, kilogram, nameSeller } =
+    product2;
   return (
     <View style={styles.card3}>
       <Pressable
         onPress={() =>
           navigation.navigate("Aliment", {
             id: id,
+            aliment: product2,
           })
         }
       >
