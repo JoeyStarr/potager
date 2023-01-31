@@ -14,7 +14,8 @@ import { Audio } from "expo-av";
 import { SIZES, COLORS, FONTS } from "../../style/index";
 import { icons } from "../../constants";
 
-import Slider from '@react-native-community/slider';
+import Slider from "@react-native-community/slider";
+import { incAdviceCount } from "../../firebase/adviceCalls";
 
 const Advice = ({ navigation, route }) => {
   const { advice } = route.params;
@@ -28,6 +29,7 @@ const Advice = ({ navigation, route }) => {
   const [rateStep, setRateStep] = React.useState(0);
 
   const getDatas = async () => {
+    incAdviceCount(advice?.ref, advice.countHear);
     setOnLoad(true);
 
     const { sound } = await Audio.Sound.createAsync({ uri: advice?.soundUrl });

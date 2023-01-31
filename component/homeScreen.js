@@ -14,6 +14,9 @@ import { useAuth } from "../hooks/useAuth";
 // User Calls - Firebase
 import { getUser } from "../firebase/userCalls";
 
+//Advices
+import { getAllAdvices } from "../firebase/adviceCalls";
+
 // Style
 import { SIZES, COLORS, FONTS } from "../style/index";
 
@@ -25,12 +28,24 @@ import Advices from "./Home/Advices";
 const Home = ({ navigation }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [userData, setUserData] = React.useState(null);
+  const [advicesData, setAdvicesData] = React.useState(null);
   const { user } = useAuth();
   const auth = getAuth();
+
+  console.log(advicesData);
 
   React.useEffect(() => {
     setIsLoading(true);
     if (user) {
+      if (advicesData === null) {
+        getAllAdvices()
+          .then((data) => {
+            setAdvicesData(data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
       if (userData === null) {
         getUser(user?.uid)
           .then((data) => {
@@ -65,6 +80,7 @@ const Home = ({ navigation }) => {
           <Advices
             isActive={userData?.hashPota ? true : false}
             navigation={navigation}
+            advices={advicesData}
           />
 
           {/*<Button title="Log Out" onPress={() => signOut(auth)} /> */}

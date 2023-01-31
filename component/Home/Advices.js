@@ -8,17 +8,21 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { COLORS, FONTS, SIZES } from "../../style/index";
-import { icons, dummyDatas } from "../../constants";
+import { icons } from "../../constants";
 
-const Advices = ({ isActive, navigation }) => {
-  const popularAdvices = dummyDatas.advices.filter(
-    (item) => item.countHear > 100
+const Advices = ({ isActive, navigation, advices }) => {
+  const MAX_HEAR = Math.max.apply(
+    Math,
+    advices?.map((advice) => advice.countHear)
+  );
+  const popularAdvices = advices?.filter(
+    (item) => item.countHear <= MAX_HEAR && item.countHear >= 5
   );
 
-  const newEstAdvices = dummyDatas.advices.filter(
+  const newEstAdvices = advices?.filter(
     (item) =>
       new Date(new Date().getTime() - 5 * 24 * 60 * 60 * 1000) <=
-      new Date(item.createdAt)
+      new Date(advices[0].createdAt.seconds * 1000)
   );
 
   return (
@@ -94,19 +98,21 @@ const Advices = ({ isActive, navigation }) => {
           </View>
 
           {/* SECTION NOUVEAUX */}
-          <View style={styles.sectionContainer}>
-            {/* SECTION TITLE */}
-            <View style={styles.sectionTitleContainer}>
-              <View style={styles.sectionTitle}>
-                <Text style={styles.sectionTitleText}>Nouveaux</Text>
+          {newEstAdvices?.length ? (
+            <View style={styles.sectionContainer}>
+              {/* SECTION TITLE */}
+              <View style={styles.sectionTitleContainer}>
+                <View style={styles.sectionTitle}>
+                  <Text style={styles.sectionTitleText}>Nouveaux</Text>
+                </View>
+              </View>
+
+              {/* SECTION CONTENT */}
+              <View style={styles.sectionContentContainer}>
+                {newEstAdvices?.map((item) => itemFlatList({ item }))}
               </View>
             </View>
-
-            {/* SECTION CONTENT */}
-            <View style={styles.sectionContentContainer}>
-              {newEstAdvices?.map((item) => itemFlatList({ item }))}
-            </View>
-          </View>
+          ) : null}
         </>
       ) : null}
     </View>
