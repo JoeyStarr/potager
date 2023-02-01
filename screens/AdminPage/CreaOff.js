@@ -25,14 +25,15 @@ import { useDispatch } from "react-redux";
 import { getProducts } from "../../store/actions/productsAction";
 import { uploadString } from "firebase/storage";
 import { async } from "@firebase/util";
+import SelectDropdown from "react-native-select-dropdown";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Conseil = ({ navigation }) => {
+const CreaOffer = ({ navigation }) => {
     const [name,setName] = useState("")
     const onPressFunction2 = () => {
-        
+   
     }
     return (
         <View style={styles.container}>
@@ -65,7 +66,7 @@ const Conseil = ({ navigation }) => {
       );
     };
     
-    export default Conseil;
+    export default CreaOffer;
     
     const styles = StyleSheet.create({
         container: {

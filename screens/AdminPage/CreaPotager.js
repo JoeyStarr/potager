@@ -29,10 +29,38 @@ import { async } from "@firebase/util";
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Conseil = ({ navigation }) => {
-    const [name,setName] = useState("")
-    const onPressFunction2 = () => {
-        
+const CreaPotager = ({ navigation }) => {
+    const [hash,setHash] = useState("")
+    const [propnom,setPrenom] = useState("")
+    const [propsurnom,setSurnom] = useState("")
+    const [propnum,setNum] = useState("")
+    const [propmail,setMail] = useState("")
+
+    const reset = () => {
+      setHash("");
+      setPrenom("");
+      setSurnom("");
+      setNum("");
+      setMail("");
+    };
+
+    const onPressFunction2 = async() => {
+      if (hash !== "" && propnom !== "" && propsurnom !== "" && propnum !== "" && propmail !== "") {
+        try {
+          const docRef = await addDoc(collection(db, "potager"), {
+            PropioEmail: propmail,
+            PropioNom: propnom,
+            PropioNum: propnum,
+            ProprioPrenom: propsurnom,
+            hashPota: hash,
+            owner: "",
+          });
+          console.log("Document written with ID: ", docRef.id);
+          reset();
+        } catch (e) {
+          console.error("Error adding document: ", e);
+        }
+      } else return;
     }
     return (
         <View style={styles.container}>
@@ -48,13 +76,41 @@ const Conseil = ({ navigation }) => {
           <View style={styles.body}>
             <TextInput
               style={styles.input}
-              placeholder="nom du produit"
+              placeholder="HashCode"
               placeholderTextColor="#FFFFFF"
-              onChangeText={(name) => setName(name)}
-              value={name}
+              onChangeText={(hash) => setHash(hash)}
+              value={hash}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="nom du propritaire"
+              placeholderTextColor="#FFFFFF"
+              onChangeText={(propnom) => setPrenom(propnom)}
+              value={propnom}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="prenom du propritaire"
+              placeholderTextColor="#FFFFFF"
+              onChangeText={(propsurnom) => setSurnom(propsurnom)}
+              value={propsurnom}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="numero du propritaire"
+              placeholderTextColor="#FFFFFF"
+              onChangeText={(propnum) => setNum(propnum)}
+              value={propnum}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="email du propritaire"
+              placeholderTextColor="#FFFFFF"
+              onChangeText={(propmail) => setMail(propmail)}
+              value={propmail}
             />
             <Pressable
-              disabled={name !== "" ? false : true}
+              disabled={hash !== "" ? false : true}
               onPress={onPressFunction2}
               style={styles.pressbutt}
             >
@@ -65,7 +121,7 @@ const Conseil = ({ navigation }) => {
       );
     };
     
-    export default Conseil;
+    export default CreaPotager;
     
     const styles = StyleSheet.create({
         container: {

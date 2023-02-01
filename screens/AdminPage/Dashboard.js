@@ -24,7 +24,7 @@ const Dashboard = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.Headers}>
-        <Text style={{fontSize:32,fontWeight:'700'}}>Djipota</Text>
+        <Text style={{fontSize:32,fontWeight:'700'}}>Djipota Admin</Text>
         <Pressable onPress={() => signOut(auth)}>
           <Ionic name="log-out-outline" size="32" color="black" />
         </Pressable>
@@ -40,7 +40,7 @@ const Dashboard = ({navigation}) => {
               </View>
             </ImageBackground>
             </Pressable>
-            <Pressable style={styles.card} onPress={() => navigation.navigate('Conseil')}>
+            <Pressable style={styles.card} onPress={() => navigation.navigate('GesConseil')}>
             <ImageBackground source={require('../../assets/images/advi.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
               <View style={{justifyContent:'center',alignItems:'center',paddingHorizontal:5}}>
                 <Text style={{fontSize:42,color:'white',fontWeight:'600'}}>Gérer</Text>
@@ -54,14 +54,14 @@ const Dashboard = ({navigation}) => {
         <View style={styles.Box}>
           <Text style={{fontSize:28,fontWeight:'400',marginVertical:10}}>Creation de Potager</Text>
           <View style={styles.cardContainer}>
-            <Pressable style={styles.card} onPress={() => navigation.navigate('Conseil')}>
+            <Pressable style={styles.card} onPress={() => navigation.navigate('Potager')}>
             <ImageBackground source={require('../../assets/images/potaa.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
               <View style={{justifyContent:'center',alignItems:'center',paddingHorizontal:5}}>
                 <Text style={{fontSize:42,color:'white',fontWeight:'600'}}>Creér</Text>
               </View>
             </ImageBackground>
             </Pressable>
-            <Pressable style={styles.card} onPress={() => navigation.navigate('Conseil')}>
+            <Pressable style={styles.card} onPress={() => navigation.navigate('GesPotager')}>
             <ImageBackground source={require('../../assets/images/gest.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
               <View style={{justifyContent:'center',alignItems:'center',paddingHorizontal:5}}>
                 <Text style={{fontSize:42,color:'white',fontWeight:'600'}}>Gérer</Text>
@@ -74,14 +74,34 @@ const Dashboard = ({navigation}) => {
         <View style={styles.Box}>
           <Text style={{fontSize:28,fontWeight:'400',marginVertical:10}}>Publication d'offre</Text>
           <View style={styles.cardContainer}>
-            <Pressable style={styles.card} onPress={() => navigation.navigate('Conseil')}>
+            <Pressable style={styles.card} onPress={() => navigation.navigate('Offer')}>
             <ImageBackground source={require('../../assets/images/offer.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
               <View style={{justifyContent:'center',alignItems:'center',paddingHorizontal:5}}>
                 <Text style={{fontSize:42,color:'white',fontWeight:'600'}}>Creér</Text>
               </View>
             </ImageBackground>
             </Pressable>
-            <Pressable style={styles.card} onPress={() => navigation.navigate('Conseil')}>
+            <Pressable style={styles.card} onPress={() => navigation.navigate('GesOff')}>
+            <ImageBackground source={require('../../assets/images/voir.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
+              <View style={{justifyContent:'center',alignItems:'center',paddingHorizontal:5}}>
+                <Text style={{fontSize:42,color:'white',fontWeight:'600'}}>Gérer</Text>
+              </View>
+            </ImageBackground>
+            </Pressable>
+          </View>
+        </View>
+
+        <View style={styles.Box}>
+          <Text style={{fontSize:28,fontWeight:'400',marginVertical:10}}>Liste de produit</Text>
+          <View style={styles.cardContainer}>
+            <Pressable style={styles.card} onPress={() => navigation.navigate('Listing')}>
+            <ImageBackground source={require('../../assets/images/offer.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
+              <View style={{justifyContent:'center',alignItems:'center',paddingHorizontal:5}}>
+                <Text style={{fontSize:42,color:'white',fontWeight:'600'}}>Creér</Text>
+              </View>
+            </ImageBackground>
+            </Pressable>
+            <Pressable style={styles.card} onPress={() => navigation.navigate('GesList')}>
             <ImageBackground source={require('../../assets/images/voir.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
               <View style={{justifyContent:'center',alignItems:'center',paddingHorizontal:5}}>
                 <Text style={{fontSize:42,color:'white',fontWeight:'600'}}>Gérer</Text>
