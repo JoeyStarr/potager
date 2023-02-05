@@ -43,6 +43,22 @@ const NewAdmin = ({ navigation }) => {
       };
     
     const onPressFunction2 = () => {
+        const auth = getAuth();
+        createUserWithEmailAndPassword(auth, email, pass)
+        .then((userCredential) => {
+            addUser(userCredential?.user?.uid).then(() => {
+                const user = userCredential.user.uid;
+                console.log(user)
+                addAdmin(user)
+            });
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            setIsLoading(false);
+            // ..
+        });
         const addUser = async (uid) => {
             try {
               const docRef = await addDoc(collection(db, "users"), {
@@ -61,8 +77,9 @@ const NewAdmin = ({ navigation }) => {
         };
         const addAdmin = async (uid) => {
             try {
-              const docRef = await addDoc(collection(db, "users"), {
+              const docRef = await addDoc(collection(db, "admin"), {
                 defcon: false,
+                pseudo:username,
                 uidAdmin: uid,
               });
               console.log("Document written with ID: ", docRef.id);
@@ -70,22 +87,6 @@ const NewAdmin = ({ navigation }) => {
               console.error("Error adding document: ", e);
             }
         };
-
-        const auth = getAuth();
-        createUserWithEmailAndPassword(auth, email, pass)
-        .then((userCredential) => {
-            addUser(userCredential?.user?.uid).then(() => {
-            addAdmin(userCredential?.user?.uid)
-            });
-            // ...
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            setIsLoading(false);
-            // ..
-        });
-
         reset()
     }
     return (

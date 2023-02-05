@@ -95,14 +95,14 @@ const Dashboard = ({navigation}) => {
           <Text style={{fontSize:28,fontWeight:'400',marginVertical:10}}>Liste de produit</Text>
           <View style={styles.cardContainer}>
             <Pressable style={styles.card} onPress={() => navigation.navigate('Listing')}>
-            <ImageBackground source={require('../../assets/images/offer.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
+            <ImageBackground source={require('../../assets/images/list.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
               <View style={{justifyContent:'center',alignItems:'center',paddingHorizontal:5}}>
                 <Text style={{fontSize:42,color:'white',fontWeight:'600'}}>Creér</Text>
               </View>
             </ImageBackground>
             </Pressable>
             <Pressable style={styles.card} onPress={() => navigation.navigate('GesList')}>
-            <ImageBackground source={require('../../assets/images/voir.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
+            <ImageBackground source={require('../../assets/images/product.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
               <View style={{justifyContent:'center',alignItems:'center',paddingHorizontal:5}}>
                 <Text style={{fontSize:42,color:'white',fontWeight:'600'}}>Gérer</Text>
               </View>
@@ -115,14 +115,14 @@ const Dashboard = ({navigation}) => {
           <Text style={{fontSize:28,fontWeight:'400',marginVertical:10}}>Créer un nouvel admin</Text>
           <View style={styles.cardContainer}>
             <Pressable style={styles.card} onPress={() => navigation.navigate('New')}>
-            <ImageBackground source={require('../../assets/images/potaa.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
+            <ImageBackground source={require('../../assets/images/user.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
               <View style={{justifyContent:'center',alignItems:'center',paddingHorizontal:5}}>
                 <Text style={{fontSize:42,color:'white',fontWeight:'600'}}>Creér</Text>
               </View>
             </ImageBackground>
             </Pressable>
             <Pressable style={styles.card} onPress={() => navigation.navigate('AdminList')}>
-            <ImageBackground source={require('../../assets/images/gest.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
+            <ImageBackground source={require('../../assets/images/usrg.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
               <View style={{justifyContent:'center',alignItems:'center',paddingHorizontal:5}}>
                 <Text style={{fontSize:42,color:'white',fontWeight:'600'}}>Gérer</Text>
               </View>

@@ -38,7 +38,7 @@ const Item = ({item,delfunction}) => (
                     value={item.defcon}
                 />
                 </View>
-                <Text style={{fontSize:14,marginTop:2}}>Email: {item.PropioEmail}</Text>
+                <Text style={{fontSize:14,marginTop:2}}>Pseudo: {item.pseudo}</Text>
             </View>
             <Pressable onPress={(item) => delfunction(item.id)} style={{backgroundColor:"black",borderRadius:"50%",padding:10}}>
                 <Ionic name="trash-outline" size="38" color="white" />
