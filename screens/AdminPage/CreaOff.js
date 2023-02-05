@@ -31,10 +31,72 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const CreaOffer = ({ navigation }) => {
+    const dispatch = useDispatch();
+
     const [name,setName] = useState("")
-    const onPressFunction2 = () => {
-   
+    const [kilo, setKilo] = useState();
+    const [mage, setMage] = useState("");
+    const [desc, setDescrp] = useState("");
+    const [prix, setPrix] = useState(null);
+    const [data, setData] = useState([]);
+    const [table, setTable] = useState([]);
+    const [produit, setProduit] = useState("");
+
+    const reset = () => {
+      setMage("");
+      setName("");
+      setPrix(null);
+      setProduit("");
+      setKilo(null);
+      setDescrp("");
+    };
+
+    const onPressFunction2 = async() => {
+      const auth = getAuth();
+      const uid = auth.currentUser.uid;
+      if (produit !== "" && prix !== "" && desc !== "") {
+        try {
+          const docRef = await addDoc(collection(db, "offer"), {
+            idSeller: uid,
+            img: mage,
+            price: prix,
+            description: desc,
+            product: produit,
+            kilogram: kilo,
+          });
+          console.log("Document written with ID: ", docRef.id);
+          dispatch(getProducts());
+          reset();
+        } catch (e) {
+          console.error("Error adding document: ", e);
+        }
+      } else return;
+      reset()
     }
+
+    const getProd = async () => {
+      const dat = await getDocs(collection(db, "listProduct"));
+      setData(dat.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    const setInTable = async (data) => {
+      setTable(data.map((doc) => doc.nameProduct));
+    };
+
+    useEffect(() => {
+      getProd();
+    }, []);
+    useEffect(() => {
+      setInTable(data);
+    }, [data]);
+
+    const findertaker = (val) => {
+      const result = data.find((obj) => {
+        return obj.nameProduct === val;
+      });
+      setMage(result.imgProduct);
+      console.log(mage);
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.head}>
@@ -47,12 +109,55 @@ const CreaOffer = ({ navigation }) => {
                     </Pressable> 
             </View>
           <View style={styles.body}>
+            <SelectDropdown
+              labelId="option"
+              data={table}
+              onSelect={(selectedItem, index) => {
+                setProduit(selectedItem);
+                findertaker(selectedItem);
+                console.log(produit);
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                // text represented after item is selected
+                // if data array is an array of objects then return selectedItem.property to render after item is selected
+                return selectedItem;
+              }}
+              rowTextForSelection={(item, index) => {
+                // text represented for each item in dropdown
+                // if data array is an array of objects then return item.property to represent item in dropdown
+                return item;
+              }}
+            />
             <TextInput
               style={styles.input}
               placeholder="nom du produit"
               placeholderTextColor="#FFFFFF"
               onChangeText={(name) => setName(name)}
               value={name}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Quantité"
+              placeholderTextColor="#FFFFFF"
+              onChangeText={(text) => setKilo(text)}
+              keyboardType="numeric"
+              value={kilo}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Prix"
+              placeholderTextColor="#FFFFFF"
+              onChangeText={setPrix}
+              keyboardType="numeric"
+              value={prix}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Ajouter une description"
+              placeholderTextColor="#FFFFFF"
+              onChangeText={setDescrp}
+              keyboardType="text"
+              value={desc}
             />
             <Pressable
               disabled={name !== "" ? false : true}

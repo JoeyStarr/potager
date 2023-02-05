@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getAuth } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { db } from "../../config/firebase";
 import { storage } from "../../config/firebase";
 import { collection, addDoc, doc, getDocs } from "firebase/firestore";
@@ -25,41 +25,68 @@ import { useDispatch } from "react-redux";
 import { getProducts } from "../../store/actions/productsAction";
 import { uploadString } from "firebase/storage";
 import { async } from "@firebase/util";
+import SelectDropdown from "react-native-select-dropdown";
+//firebase
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const CreaPotager = ({ navigation }) => {
-    const [hash,setHash] = useState("")
-    const [propnom,setPrenom] = useState("")
-    const [propsurnom,setSurnom] = useState("")
-    const [propnum,setNum] = useState("")
-    const [propmail,setMail] = useState("")
+const NewAdmin = ({ navigation }) => {
+    const [email,setEmail] = useState("")
+    const [username,setUser] = useState("")
+    const [pass,setPass] = useState("")
 
     const reset = () => {
-      setHash("");
-      setPrenom("");
-      setSurnom("");
-      setNum("");
-      setMail("");
-    };
+        setEmail("");
+        setUser("");
+        setPass("");
+      };
+    
+    const onPressFunction2 = () => {
+        const addUser = async (uid) => {
+            try {
+              const docRef = await addDoc(collection(db, "users"), {
+                email: email,
+                hashPota: "",
+                name: username,
+                number: "",
+                prename: "",
+                mdp:pass,
+                uid: uid,
+              });
+              console.log("Document written with ID: ", docRef.id);
+            } catch (e) {
+              console.error("Error adding document: ", e);
+            }
+        };
+        const addAdmin = async (uid) => {
+            try {
+              const docRef = await addDoc(collection(db, "users"), {
+                defcon: false,
+                uidAdmin: uid,
+              });
+              console.log("Document written with ID: ", docRef.id);
+            } catch (e) {
+              console.error("Error adding document: ", e);
+            }
+        };
 
-    const onPressFunction2 = async() => {
-      if (hash !== "" && propnom !== "" && propsurnom !== "" && propnum !== "" && propmail !== "") {
-        try {
-          const docRef = await addDoc(collection(db, "potager"), {
-            PropioEmail: propmail,
-            PropioNom: propnom,
-            PropioNum: propnum,
-            ProprioPrenom: propsurnom,
-            owner: hash,
-          });
-          console.log("Document written with ID: ", docRef.id);
-          reset();
-        } catch (e) {
-          console.error("Error adding document: ", e);
-        }
-      } else return;
+        const auth = getAuth();
+        createUserWithEmailAndPassword(auth, email, pass)
+        .then((userCredential) => {
+            addUser(userCredential?.user?.uid).then(() => {
+            addAdmin(userCredential?.user?.uid)
+            });
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            setIsLoading(false);
+            // ..
+        });
+
+        reset()
     }
     return (
         <View style={styles.container}>
@@ -73,43 +100,29 @@ const CreaPotager = ({ navigation }) => {
                     </Pressable> 
             </View>
           <View style={styles.body}>
-            <TextInput
+          <TextInput
               style={styles.input}
-              placeholder="HashCode"
+              placeholder="User"
               placeholderTextColor="#FFFFFF"
-              onChangeText={(hash) => setHash(hash)}
-              value={hash}
+              onChangeText={(username) => setUser(username)}
+              value={username}
             />
             <TextInput
               style={styles.input}
-              placeholder="nom du propritaire"
+              placeholder="Email"
               placeholderTextColor="#FFFFFF"
-              onChangeText={(propnom) => setPrenom(propnom)}
-              value={propnom}
+              onChangeText={(email) => setEmail(email)}
+              value={email}
             />
             <TextInput
               style={styles.input}
-              placeholder="prenom du propritaire"
+              placeholder="Mot de passe"
               placeholderTextColor="#FFFFFF"
-              onChangeText={(propsurnom) => setSurnom(propsurnom)}
-              value={propsurnom}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="numero du propritaire"
-              placeholderTextColor="#FFFFFF"
-              onChangeText={(propnum) => setNum(propnum)}
-              value={propnum}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="email du propritaire"
-              placeholderTextColor="#FFFFFF"
-              onChangeText={(propmail) => setMail(propmail)}
-              value={propmail}
+              onChangeText={(pass) => setPass(pass)}
+              value={pass}
             />
             <Pressable
-              disabled={hash !== "" ? false : true}
+              disabled={email !== "" ? false : true}
               onPress={onPressFunction2}
               style={styles.pressbutt}
             >
@@ -120,7 +133,7 @@ const CreaPotager = ({ navigation }) => {
       );
     };
     
-    export default CreaPotager;
+    export default NewAdmin;
     
     const styles = StyleSheet.create({
         container: {

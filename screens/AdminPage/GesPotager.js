@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import { db } from "../../config/firebase";
 import { storage } from "../../config/firebase";
-import { collection, addDoc, doc, getDocs } from "firebase/firestore";
+import { collection, addDoc, doc, getDocs, deleteDoc } from "firebase/firestore";
 import Ionic from "react-native-vector-icons/Ionicons";
 import {
   Text,
@@ -22,7 +22,69 @@ import {
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const GesPotager = ({navigation}) => {
+
+const Item = ({item,delfunction}) => (
+    <View style={styles.boxLine}>
+        <View style={styles.line}>
+            <View>
+                <Text style={{fontSize:13,marginTop:2}}>Hash: {item.owner}</Text>
+                <Text style={{fontSize:14,marginTop:2}}>Propietaire: {item.PropioNom} {item.PropioPrenom}</Text>
+                <Text style={{fontSize:14,marginTop:2}}>Numero: {item.PropioNum}</Text>
+                <Text style={{fontSize:14,marginTop:2}}>Email: {item.PropioEmail}</Text>
+            </View>
+            <Pressable onPress={(item) => delfunction(item.id)} style={{backgroundColor:"black",borderRadius:"50%",padding:10}}>
+                <Ionic name="trash-outline" size="38" color="white" />
+            </Pressable>
+        </View>
+    </View>
+  );
+
+
+
+const GesList = ({navigation}) => {
+    const [data, setData] = useState([]);
+    const [table, setTable] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const getProd = async () => {
+        const dat = await getDocs(collection(db, "potager"));
+        setData(dat.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      };
+    const setInTable = async (data) => {
+        setTable(data.map((doc) => doc.nameProduct));
+    };
+
+    useEffect(() => {
+        getProd();
+      }, []);
+      useEffect(() => {
+        setInTable(data);
+      }, [data]);
+
+    console.log(data)
+
+    const delfunction = (idtem) => {
+        const docRef = doc(db, "listProduct",idtem);
+        deleteDoc(docRef).then(() =>{
+            console.log("Entire Document has been deleted successfully.")
+        }).catch(() => {
+            console.log(error);
+        })
+    }
+
+    
+    const renderItem = ({item}) => {
+    
+        return (
+          <Item
+            item={item}
+            delfunction ={delfunction}
+            onPress={() => setSelectedId(item.id)}
+          />
+        );
+      };
+
+
     return (
         <View style={styles.container}>
             <View style={styles.head}>
@@ -34,10 +96,15 @@ const GesPotager = ({navigation}) => {
                     <Ionic name="arrow-back-outline" size="38" color="#F5F5F5" />
                 </Pressable> 
              </View>
+             <FlatList
+                data={data}
+                renderItem={renderItem}
+                keyExtractor={item => item.id}
+            />
         </View>
     )
 }
-export default GesPotager;
+export default GesList;
 
 
 const styles = StyleSheet.create({
@@ -90,4 +157,31 @@ const styles = StyleSheet.create({
         width: windowWidth,
         backgroundColor: "white",
     },
+    boxLine:{
+        width:"100%",
+        alignItems:'center',
+        marginHorizontal:5,
+        marginTop:15,
+    },
+    line:{
+        flexDirection:"row",
+        justifyContent:'space-evenly',
+        width:'90%',
+        borderRadius:10,
+        padding:10,
+        alignItems:'center',
+        marginVertical:10,
+        backgroundColor:"white",
+        ...Platform.select({
+          ios: {
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 1,
+              shadowRadius: 2,    
+          },
+          android: {
+              elevation: 5,
+          },
+          }),
+    }
 })

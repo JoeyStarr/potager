@@ -14,6 +14,7 @@ import {
   TextInput,
   Modal,
   FlatList,
+  Switch,
   Dimensions,
   TouchableOpacity,
   Alert,
@@ -26,16 +27,21 @@ const windowHeight = Dimensions.get('window').height;
 const Item = ({item,delfunction}) => (
     <View style={styles.boxLine}>
         <View style={styles.line}>
-            <Image 
-                source={{ uri: item.img }}
-                style={{ width: 48, height: 48 }}/>
             <View>
-                <Text style={{fontSize:14}}>{item.product}</Text>
-                <Text style={{fontSize:14}}>{item.price} CFA</Text>
-                <Text style={{fontSize:14}}>{item.kilogram} qté</Text>
+                <Text style={{fontSize:13,marginTop:2}}>uid: {item.uidAdmin}</Text>
+                <View style={{flexDirection:'row',alignItems:'center'}}>
+                <Text style={{marginRight:5}}>Defcon</Text>
+                <Switch
+                    trackColor={{false: '#000000', true: '#FFFFF'}}
+                    thumbColor={item.defcon ? '#FFFFF' : '#00000'}
+                    ios_backgroundColor="#00000"
+                    value={item.defcon}
+                />
+                </View>
+                <Text style={{fontSize:14,marginTop:2}}>Email: {item.PropioEmail}</Text>
             </View>
-            <Pressable onPress={(item) => delfunction(item.id)}>
-                <Ionic name="trash-outline" size="38" color="black" />
+            <Pressable onPress={(item) => delfunction(item.id)} style={{backgroundColor:"black",borderRadius:"50%",padding:10}}>
+                <Ionic name="trash-outline" size="38" color="white" />
             </Pressable>
         </View>
     </View>
@@ -43,42 +49,34 @@ const Item = ({item,delfunction}) => (
 
 
 
-const GesList = ({navigation}) => {
+const AdminList = ({navigation}) => {
     const [data, setData] = useState([]);
+    const [data2, setData2] = useState([]);
     const [table, setTable] = useState([]);
-    const [tab,setTabs] = useState([{}])
     const [modalVisible, setModalVisible] = useState(false);
+    
 
     const getProd = async () => {
-        const dat = await getDocs(collection(db, "offer"));
+        const dat = await getDocs(collection(db, "admin"));
         setData(dat.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      };
-    const setInTable = async (data) => {
-        const auth = getAuth();
-        const uid = auth.currentUser.uid;
-        const donne = data.filter((doc) => doc.idSeller === uid)
-        setTable(donne)
-    }
+    };
+    const getProd2 = async () => {
+        const dat = await getDocs(collection(db, "users"));
+        setData2(dat.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    const setInTable = async (data2) => {
+        setTable(data2.map((doc) => doc.nameProduct));
+    };
+
     useEffect(() => {
         getProd();
+        getProd2();
       }, []);
-    useEffect(() => {
-        setInTable(data)
-    },[data])
-    console.log(table)
-      /*
-    const findertaker = (data) => {
-        const auth = getAuth();
-        const uid = auth.currentUser.uid;
-        const result = data.find((obj) => {
-            if(obj.idSeller === uid){
-                setTabs([...tab,obj])
-            }
-          return
-        });
-        setTabs(data.map((doc) => doc.nameProduct))
-    };
-    console.log(tab) */
+      useEffect(() => {
+        setInTable(data2);
+      }, [data]);
+
+    console.log(data)
 
     const delfunction = (idtem) => {
         const docRef = doc(db, "listProduct",idtem);
@@ -114,14 +112,14 @@ const GesList = ({navigation}) => {
                 </Pressable> 
              </View>
              <FlatList
-                data={table}
+                data={data}
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
             />
         </View>
     )
 }
-export default GesList;
+export default AdminList;
 
 
 const styles = StyleSheet.create({
@@ -183,7 +181,7 @@ const styles = StyleSheet.create({
     line:{
         flexDirection:"row",
         justifyContent:'space-evenly',
-        width:'80%',
+        width:'90%',
         borderRadius:10,
         padding:10,
         alignItems:'center',

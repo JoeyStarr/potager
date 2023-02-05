@@ -110,6 +110,26 @@ const Dashboard = ({navigation}) => {
             </Pressable>
           </View>
         </View>
+
+        <View style={styles.Box}>
+          <Text style={{fontSize:28,fontWeight:'400',marginVertical:10}}>Créer un nouvel admin</Text>
+          <View style={styles.cardContainer}>
+            <Pressable style={styles.card} onPress={() => navigation.navigate('New')}>
+            <ImageBackground source={require('../../assets/images/potaa.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
+              <View style={{justifyContent:'center',alignItems:'center',paddingHorizontal:5}}>
+                <Text style={{fontSize:42,color:'white',fontWeight:'600'}}>Creér</Text>
+              </View>
+            </ImageBackground>
+            </Pressable>
+            <Pressable style={styles.card} onPress={() => navigation.navigate('AdminList')}>
+            <ImageBackground source={require('../../assets/images/gest.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
+              <View style={{justifyContent:'center',alignItems:'center',paddingHorizontal:5}}>
+                <Text style={{fontSize:42,color:'white',fontWeight:'600'}}>Gérer</Text>
+              </View>
+            </ImageBackground>
+            </Pressable>
+          </View>
+        </View>
       </ScrollView>
     </View>
   );
