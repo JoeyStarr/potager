@@ -13,6 +13,7 @@ import GesOff from "../../screens/AdminPage/GesOff";
 import GesPotager from "../../screens/AdminPage/GesPotager";
 import NewAdmin from "../../screens/AdminPage/newadmin";
 import AdminList from "../../screens/AdminPage/listadmin";
+import Details from "../../screens/AdminPage/detail";
 
 const AdminStack = () => {
   const Stack = createNativeStackNavigator();
@@ -37,6 +38,8 @@ const AdminStack = () => {
 
         <Stack.Screen name="New" component={NewAdmin}/>
         <Stack.Screen name="AdminList" component={AdminList}/>
+
+        <Stack.Screen name="Detail" component={Details}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

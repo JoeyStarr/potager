@@ -23,21 +23,29 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 
-const Item = ({item,delfunction}) => (
+const Item = ({item,delfunction,navigation}) => (
     <View style={styles.boxLine}>
+            <Pressable 
+                onPress={() => 
+                    navigation.navigate('Detail',{
+                    itemId:item.id
+                    })
+                }>
         <View style={styles.line}>
             <Image 
                 source={{ uri: item.img }}
                 style={{ width: 48, height: 48 }}/>
-            <View>
-                <Text style={{fontSize:14}}>{item.product}</Text>
-                <Text style={{fontSize:14}}>{item.price} CFA</Text>
-                <Text style={{fontSize:14}}>{item.kilogram} qté</Text>
-            </View>
+                <View>
+                    <Text style={{fontSize:14}}>{item.product}</Text>
+                    <Text style={{fontSize:14}}>{item.price} CFA</Text>
+                    <Text style={{fontSize:14}}>{item.kilogram} qté</Text>
+                </View>
+            
             <Pressable onPress={(item) => delfunction(item.id)}>
                 <Ionic name="trash-outline" size="38" color="black" />
             </Pressable>
         </View>
+        </Pressable>
     </View>
   );
 
@@ -96,6 +104,7 @@ const GesList = ({navigation}) => {
           <Item
             item={item}
             delfunction ={delfunction}
+            navigation={navigation}
             onPress={() => setSelectedId(item.id)}
           />
         );

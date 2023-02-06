@@ -49,7 +49,7 @@ const GesList = ({navigation}) => {
     const getProd = async () => {
         const dat = await getDocs(collection(db, "potager"));
         setData(dat.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      };
+    };
     const setInTable = async (data) => {
         setTable(data.map((doc) => doc.nameProduct));
     };
