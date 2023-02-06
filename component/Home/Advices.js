@@ -109,7 +109,9 @@ const Advices = ({ isActive, navigation, advices }) => {
 
               {/* SECTION CONTENT */}
               <View style={styles.sectionContentContainer}>
-                {newEstAdvices?.map((item) => itemFlatList({ item }))}
+                {newEstAdvices?.map((item) =>
+                  itemFlatList({ item, navigation })
+                )}
               </View>
             </View>
           ) : null}
@@ -140,7 +142,7 @@ const itemFlatList = ({ item, navigation }) => {
       >
         {/* Image */}
         <Image
-          source={{ uri: item.imageUrl }}
+          source={{ uri: item.imageUrl || item.imgUrl }}
           resizeMode="cover"
           resizeMethod="resize"
           style={{

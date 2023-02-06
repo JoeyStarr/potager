@@ -248,7 +248,7 @@ const Advice = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={{ uri: advice.imageUrl }}
+        source={{ uri: advice.imageUrl || advice.imgUrl }}
         style={{ width: "100%", height: "100%" }}
         resizeMethod="resize"
         resizeMode="cover"
@@ -294,7 +294,7 @@ const Advice = ({ navigation, route }) => {
                 }}
               >
                 <Image
-                  source={{ uri: advice.imageUrl }}
+                  source={{ uri: advice.imageUrl || advice.imgUrl }}
                   resizeMethod="resize"
                   resizeMode="cover"
                   style={{ width: "100%", height: "100%", borderRadius: 20 }}

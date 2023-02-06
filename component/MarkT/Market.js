@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "../../style";
 import { db } from "../../config/firebase";
 import { collection, doc, getDocs } from "firebase/firestore";
@@ -161,7 +161,7 @@ const Product2 = ({ product2, navigation }) => {
 
 const Market = ({ navigation }) => {
   const dispatch = useDispatch();
-  const products = useSelector((store) => store.products);
+  let products = useSelector((store) => store.products);
 
   // State for showing Activity indicator during loading data
   const [isLoading, setIsLoading] = React.useState(false);
@@ -219,7 +219,7 @@ const Market = ({ navigation }) => {
     );
   };
 
-  useEffect(() => {
+    useEffect(() => {
     if (search?.length > 0) {
       setIsLoading(true);
       setIsSearching(true);
@@ -247,13 +247,21 @@ const Market = ({ navigation }) => {
     setIsLoading(false);
   };
 
-  useEffect(() => {
+    useEffect(() => {
     getPro();
     getListProd();
   }, []);
 
   useEffect(() => {
-    setDataProducts(products);
+    dispatch(getProducts());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (products) {
+      setTimeout(() => {
+        setDataProducts(products);
+      }, 500);
+    }
   }, [products]);
 
   const Item = ({ title }) => (

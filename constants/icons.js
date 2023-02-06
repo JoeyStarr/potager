@@ -23,6 +23,8 @@ const multiply_1_5x = require("../assets/icons/multiply_1_5x.png");
 const multiply_2x = require("../assets/icons/multiply_2x.png");
 
 const logout = require("../assets/icons/logout.png");
+const loading = require("../assets/icons/loading.png");
+const valid = require("../assets/icons/valid.png");
 
 export default {
   cart,
@@ -47,4 +49,7 @@ export default {
   multiply_1x,
   multiply_1_5x,
   multiply_2x,
+  loading,
+
+  valid,
 };

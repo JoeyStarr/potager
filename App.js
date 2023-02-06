@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { StyleSheet, View, Text } from "react-native";
 
 import { useFonts } from "expo-font";
@@ -36,47 +36,47 @@ export default function App() {
   }
 
   return (
-    <ToastProvider
-      style={{ flex: 1, width: "100%" }}
-      renderType={{
-        custom_toast: (toast) => (
-          <View
-            style={{
-              maxWidth: "90%",
-              paddingHorizontal: 15,
-              paddingVertical: 10,
-              backgroundColor: "#fff",
-              marginVertical: 4,
-              borderRadius: 8,
-              borderLeftColor: "#00C851",
-              borderLeftWidth: 6,
-              justifyContent: "center",
-              paddingLeft: 16,
-              marginTop: 40,
-            }}
-          >
-            <Text
+    <Provider store={store}>
+      <ToastProvider
+        style={{ flex: 1, width: "100%" }}
+        renderType={{
+          custom_toast: (toast) => (
+            <View
               style={{
-                fontSize: 14,
-                color: "#333",
-                fontWeight: "bold",
+                maxWidth: "90%",
+                paddingHorizontal: 15,
+                paddingVertical: 10,
+                backgroundColor: "#fff",
+                marginVertical: 4,
+                borderRadius: 8,
+                borderLeftColor: "#00C851",
+                borderLeftWidth: 6,
+                justifyContent: "center",
+                paddingLeft: 16,
+                marginTop: 40,
               }}
             >
-              {toast.data.title}
-            </Text>
-            <Text style={{ color: "#a3a3a3", marginTop: 2 }}>
-              {toast.message}
-            </Text>
-          </View>
-        ),
-      }}
-    >
-      <Provider store={store}>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: "#333",
+                  fontWeight: "bold",
+                }}
+              >
+                {toast.data.title}
+              </Text>
+              <Text style={{ color: "#a3a3a3", marginTop: 2 }}>
+                {toast.message}
+              </Text>
+            </View>
+          ),
+        }}
+      >
         <View style={styles.container}>
           <RootNavigation />
         </View>
-      </Provider>
-    </ToastProvider>
+      </ToastProvider>
+    </Provider>
   );
 }
 
