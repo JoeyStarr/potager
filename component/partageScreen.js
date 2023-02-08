@@ -3,7 +3,7 @@ import SelectDropdown from "react-native-select-dropdown";
 import styles from "../style";
 import { getAuth } from "firebase/auth";
 import { db } from "../config/firebase";
-import { collection, addDoc, doc, getDocs } from "firebase/firestore";
+import { collection, addDoc, doc, getDocs,deleteDoc } from "firebase/firestore";
 import Ionic from "react-native-vector-icons/Ionicons";
 import {
   Text,
@@ -20,6 +20,34 @@ import {
 import { useDispatch } from "react-redux";
 import { getProducts } from "../store/actions/productsAction";
 
+
+
+const Item = ({ item, delfunction, navigation }) => (
+  <View style={styles.boxLine}>
+    <Pressable
+      onPress={() =>
+        navigation.navigate("Detail", {
+          itemId: item.id,
+        })
+      }
+    >
+      <View style={styles.line}>
+        <View>
+          <Text style={{ fontSize: 14 }}>{item.product}</Text>
+          <Text style={{ fontSize: 14 }}>{item.price} CFA</Text>
+          <Text style={{ fontSize: 14 }}>{item.name} {item.prename}</Text>
+          <Text style={{ fontSize: 14 }}>{item.location}</Text>
+          <Text style={{ fontSize: 14 }}>{item.number}</Text>
+        </View>
+
+        <Pressable onPress={() => delfunction(item.id)}>
+          <Ionic name="trash-outline" size="38" color="black" />
+        </Pressable>
+      </View>
+    </Pressable>
+  </View>
+);
+
 const Partage = ({ navigation }) => {
   const dispatch = useDispatch();
 
@@ -29,9 +57,36 @@ const Partage = ({ navigation }) => {
   const [mage, setMage] = useState("");
   const [data, setData] = useState([]);
   const [table, setTable] = useState([]);
+
+  const [dat,setDat] = useState([])
+  const [tabs,setTabs] = useState([])
+
   const [prix, setPrix] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
+
+  const getComm = async () => {
+    const dat = await getDocs(collection(db, "command"));
+    setDat(dat.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  };
+
+  const setInTabs = async (dat) => {
+    const auth = getAuth();
+    const uid = auth.currentUser.uid;
+    const donne = dat.filter((doc) => doc.idSeller === uid);
+    console.log(uid)
+    setTabs(donne);
+  };
+
+  useEffect(() => {
+    getComm();
+  }, []);
+  useEffect(() => {
+    setInTabs(dat);
+  }, [dat]);
+
+  console.log(tabs)
+
 
   const reset = () => {
     setPrix(null);
@@ -40,25 +95,6 @@ const Partage = ({ navigation }) => {
     setDescrp("");
   };
 
-  const Item = ({ id, title }) => (
-    <View style={styles.item}>
-      <View style={styles.it1}>
-        <Text style={styles.title}>{id}</Text>
-        <Text style={styles.title}>{id}</Text>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.title}>{title}</Text>
-      </View>
-      <Pressable
-        style={styles.it2}
-        onPress={() => {
-          navigation.navigate("Accueil");
-        }}
-      >
-        <Ionic name="close-circle-outline" size="28" colour="black" />
-      </Pressable>
-    </View>
-  );
 
   const onPressFunction2 = async () => {
     const auth = getAuth();
@@ -107,35 +143,27 @@ const Partage = ({ navigation }) => {
     console.log(mage);
   };
 
-  const DATA = [
-    {
-      id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-      title: "First Item",
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-      title: "Second Item",
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Third Item",
-    },
-    {
-      id: "bd7acbea-c1b1-46c2-aed5-3ad5edeb28ba",
-      title: "First Item",
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbezffzf97f63",
-      title: "Second Item",
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145jkjkl29d72",
-      title: "Third Item",
-    },
-  ];
+  const delfunction = (idtem) => {
+    const docRef = doc(db, "command", idtem);
+    deleteDoc(docRef)
+      .then(() => {
+        console.log("Entire Document has been deleted successfully.");
+      })
+      .catch(() => {
+        console.log(error);
+      });
+  };
 
-  const renderItem = ({ item }) => <Item id={item?.id} title={item?.title} />;
-
+  const renderItem = ({ item }) => {
+    return (
+      <Item
+        item={item}
+        delfunction={delfunction}
+        navigation={navigation}
+        onPress={() => setSelectedId(item.id)}
+      />
+    );
+  };
   return (
     <View style={styles.container2}>
       <View style={styles.header}>
@@ -173,9 +201,9 @@ const Partage = ({ navigation }) => {
                 <Text style={styles.textStyle}>Fermez</Text>
               </Pressable>
               <FlatList
-                data={DATA}
-                keyExtractor={(item) => item?.id}
-                renderItem={({ item }) => renderItem({ item })}
+                data={tabs}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
               />
             </View>
           </View>

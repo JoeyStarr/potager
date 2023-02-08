@@ -75,6 +75,7 @@ const GesList = ({ navigation }) => {
   useEffect(() => {
     setInTable(data);
   }, [data]);
+  
   console.log(table);
   /*
     const findertaker = (data) => {

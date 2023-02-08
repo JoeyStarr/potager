@@ -261,6 +261,25 @@ const styles = StyleSheet.create({
         padding:5,
         backgroundColor:'#F9F6F7'
     },
-  });
+    boxLine: {
+      width: "100%",
+      alignItems: "center",
+      marginHorizontal: 2,
+      marginTop: 5,
+      marginBottom: 25,
+    },
+    line: {
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+      width:"90%",
+      borderRadius: 8,
+      padding: 10,
+      alignItems: "center",
+      marginVertical: 10,
+      backgroundColor: "white",
+      borderWidth:1,
+      padding:10,
+    },  
+});
   
   export default styles;

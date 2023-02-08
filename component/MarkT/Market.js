@@ -365,7 +365,7 @@ const Market = ({ navigation }) => {
               <>
                 <View style={styles.bloc1}>
                   <Text style={{ fontSize: 24, marginVertical: 10 }}>
-                    Produit populaire
+                    Tous nos produits
                   </Text>
                   <View style={styles.containerBox}>
                     <FlatList

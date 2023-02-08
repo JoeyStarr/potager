@@ -54,7 +54,7 @@ const CreaPotager = ({ navigation }) => {
           PropioNom: propnom,
           PropioNum: propnum,
           ProprioPrenom: propsurnom,
-          owner: "",
+          owner: hash,
           hashPota: hash,
         });
         console.log("Document written with ID: ", docRef.id);
@@ -99,7 +99,7 @@ const CreaPotager = ({ navigation }) => {
     }
   };
   useEffect(() => {
-    generateUniqueHash(7);
+    generateUniqueHash(10);
   }, []);
 
   return (

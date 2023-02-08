@@ -34,6 +34,7 @@ const Validate = ({ isVisible, setIsVisible, navigation }) => {
   const [isSending, setIsSending] = React.useState(false);
 
   const createCommand = async (item) => {
+    console.log(item)
     setIsSending(true);
     try {
       const commandRef = await addDoc(collection(db, "command"), {
@@ -44,7 +45,8 @@ const Validate = ({ isVisible, setIsVisible, navigation }) => {
         number: number,
         prename: prename,
         price: item?.price,
-        product: item?.id,
+        kilogram: item?.kilogram,
+        product: item?.product,
       });
       setName("");
       setPrename("");

@@ -196,20 +196,6 @@ const itemFlatList = ({ item, navigation }) => {
               {item.time?.length >= 10 ? item?.time : "0" + item?.time} min
             </Text>
           </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Image
-              source={icons.ear}
-              resizeMode="cover"
-              style={{ width: 20, height: 20, marginHorizontal: 5 }}
-            />
-            <Text style={{ ...FONTS.h4 }}>{item?.countHear}</Text>
-          </View>
         </View>
       </View>
     </TouchableOpacity>
