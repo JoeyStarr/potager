@@ -46,7 +46,7 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const Conseil = ({ navigation }) => {
-  const toast = useToast()
+  const toast = useToast();
 
   // STATE
   const [adviceData, setAdviceData] = useState({
@@ -221,12 +221,17 @@ const Conseil = ({ navigation }) => {
 
       setStepText("Envoie de l'image...");
 
-      const imageUrl = await uploadImage(imageBlob, imageName);
-      setStepText("Envoie de l'audio...");
+      const imageUrl = await uploadImage(imageBlob, imageName).then(
+        async (imgUrl) => {
+          setStepText("Envoie de l'audio...");
 
-      const soundUrl = await uploadAudio(audioBlob, soundName).then((res) => {
-        setAdviceData({ ...adviceData, imageUrl: imageUrl, soundUrl: res });
-      });
+          const soundUrl = await uploadAudio(audioBlob, soundName).then(
+            (res) => {
+              setAdviceData({ ...adviceData, imageUrl: imgUrl, soundUrl: res });
+            }
+          );
+        }
+      );
     }
   };
 

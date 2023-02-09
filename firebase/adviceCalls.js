@@ -44,9 +44,15 @@ export const incAdviceCount = async (adviceID, count) => {
 
 export const uploadImage = async (blobFile, fileName) => {
   return new Promise((resolve, reject) => {
+    // Create the file metadata
+    /** @type {any} */
+    const metadata = {
+      contentType: "image/jpeg",
+    };
+
     if (!blobFile) return;
     const storageRef = ref(storage, `advices/${fileName}`); //LINE A
-    const uploadTask = uploadBytesResumable(storageRef, blobFile); //LINE B
+    const uploadTask = uploadBytesResumable(storageRef, blobFile, metadata); //LINE B
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on(
       "state_changed",
@@ -93,9 +99,14 @@ export const uploadImage = async (blobFile, fileName) => {
 
 export const uploadAudio = async (blobFile, fileName) => {
   return new Promise((resolve, reject) => {
-    if (!blobFile) return;
-    const sotrageRef = ref(storage, `advices/${fileName}`); //LINE A
-    const uploadTask = uploadBytesResumable(sotrageRef, blobFile); //LINE B
+    // Create the file metadata
+    /** @type {any} */
+    const metadata = {
+      contentType: "audio/mpeg",
+    };
+
+    const storageRef = ref(storage, `advices/${fileName}`); //LINE A
+    const uploadTask = uploadBytesResumable(storageRef, blobFile, metadata); //LINE B
     // Listen for state changes, errors, and completion of the upload.
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on(
