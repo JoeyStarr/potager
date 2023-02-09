@@ -121,7 +121,7 @@ const HashScreen = ({ navigation, route }) => {
           }}
         >
           <TextInput
-            value={hashText.toUpperCase()}
+            value={hashText}
             onChangeText={(text) => {
               setHashText(text);
               setErrorText("");
