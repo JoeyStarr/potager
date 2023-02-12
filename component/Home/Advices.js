@@ -188,6 +188,22 @@ const itemFlatList = ({ item, navigation }) => {
             }}
           >
             <Image
+              source={icons.ear}
+              resizeMode="cover"
+              style={{ width: 20, height: 20, marginHorizontal: 5 }}
+            />
+            <Text style={{ ...FONTS.h4 }}>
+              {item.countHear < 10 ? `0${item.countHear}` : `${item.countHear}`}
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Image
               source={icons.count}
               resizeMode="cover"
               style={{ width: 20, height: 20, marginHorizontal: 5 }}

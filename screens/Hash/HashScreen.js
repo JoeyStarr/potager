@@ -26,9 +26,13 @@ const HashScreen = ({ navigation, route }) => {
     setIsLoading(true);
     const response = await getPotagerByHash(hashText);
 
-    if (response == null) {
+    console.log(response);
+
+      if (response == null) {
       setErrorText("Aucun potager trouvé pour ce code");
-    } else {
+    } else if(response?.owner !== ""){
+      setErrorText("Ce potager appartient déjà à quelqu'un")
+    }else {
       await setHashPota(docRef, hashText, response?.potagerRef, userUid);
       console.log("Great! *");
       navigation.replace("Home");

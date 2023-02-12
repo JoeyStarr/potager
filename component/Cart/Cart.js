@@ -52,9 +52,20 @@ const Cart = ({ navigation }) => {
             <Ionic name="arrow-back-outline" size="34" colour="black" />
           </Pressable>
           <Text style={{ fontSize: 22 }}>Mon Panier</Text>
-          <Pressable onPress={() => navigation.navigate("Cart")}>
-            <Ionic name="basket-outline" size="34" colour="black" />
-          </Pressable>
+
+          <View>
+            <Pressable
+              onPress={() => {
+                navigation.navigate("Cart");
+              }}
+            >
+              <Ionic name="basket-outline" size="32" colour="black" />
+            </Pressable>
+
+            <View style={subStyles.cartBubble}>
+              <Text style={{ color: "white" }}>{cart.length}</Text>
+            </View>
+          </View>
         </View>
 
         {cart?.length ? (
@@ -276,5 +287,18 @@ const subStyles = StyleSheet.create({
     backgroundColor: COLORS.primaryColor,
     borderRadius: 15,
     marginVertical: 10,
+  },
+  cartBubble: {
+    borderWidth: 1,
+    width: 20,
+    height: 20,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
+
+    position: "absolute",
+    top: -10,
+    right: -7,
+    backgroundColor: "black",
   },
 });

@@ -3,7 +3,13 @@ import SelectDropdown from "react-native-select-dropdown";
 import styles from "../style";
 import { getAuth } from "firebase/auth";
 import { db } from "../config/firebase";
-import { collection, addDoc, doc, getDocs,deleteDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  doc,
+  getDocs,
+  deleteDoc,
+} from "firebase/firestore";
 import Ionic from "react-native-vector-icons/Ionicons";
 import {
   Text,
@@ -13,14 +19,17 @@ import {
   TextInput,
   Modal,
   FlatList,
-  TouchableOpacity,
 } from "react-native";
 
 // Redux
 import { useDispatch } from "react-redux";
 import { getProducts } from "../store/actions/productsAction";
 
+// THeme
+import { SIZES, FONTS, COLORS } from "../style/theme";
 
+// Firebase
+import { getCommandsBySeller } from "../firebase/commandCalls";
 
 const Item = ({ item, delfunction, navigation }) => (
   <View style={styles.boxLine}>
@@ -35,7 +44,9 @@ const Item = ({ item, delfunction, navigation }) => (
         <View>
           <Text style={{ fontSize: 14 }}>{item.product}</Text>
           <Text style={{ fontSize: 14 }}>{item.price} CFA</Text>
-          <Text style={{ fontSize: 14 }}>{item.name} {item.prename}</Text>
+          <Text style={{ fontSize: 14 }}>
+            {item.name} {item.prename}
+          </Text>
           <Text style={{ fontSize: 14 }}>{item.location}</Text>
           <Text style={{ fontSize: 14 }}>{item.number}</Text>
         </View>
@@ -50,6 +61,12 @@ const Item = ({ item, delfunction, navigation }) => (
 
 const Partage = ({ navigation }) => {
   const dispatch = useDispatch();
+  const auth = getAuth();
+  const uid = auth.currentUser.uid;
+
+  // STATE
+  // STATE FOR COMMANDS
+  const [commands, setCommands] = useState(null);
 
   const [produit, setProduit] = useState("");
   const [kilo, setKilo] = useState();
@@ -57,37 +74,27 @@ const Partage = ({ navigation }) => {
   const [mage, setMage] = useState("");
   const [data, setData] = useState([]);
   const [table, setTable] = useState([]);
+  const [globalPrice, setGlobalPrice] = useState(0);
 
-  const [dat,setDat] = useState([])
-  const [tabs,setTabs] = useState([])
+  const [dat, setDat] = useState([]);
+  const [tabs, setTabs] = useState([]);
 
   const [prix, setPrix] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
 
   const getComm = async () => {
-    const dat = await getDocs(collection(db, "command"));
-    setDat(dat.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    const dat = await getCommandsBySeller(uid);
+    console.log(data);
+    //setDat(dat.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
   const setInTabs = async (dat) => {
-    const auth = getAuth();
-    const uid = auth.currentUser.uid;
     const donne = dat.filter((doc) => doc.idSeller === uid);
-    console.log(uid)
     setTabs(donne);
   };
 
-  useEffect(() => {
-    getComm();
-  }, []);
-  useEffect(() => {
-    setInTabs(dat);
-  }, [dat]);
-
-  console.log(tabs)
-
-
+  // FUNCTIONS
   const reset = () => {
     setPrix(null);
     setProduit("");
@@ -95,10 +102,7 @@ const Partage = ({ navigation }) => {
     setDescrp("");
   };
 
-
   const onPressFunction2 = async () => {
-    const auth = getAuth();
-    const uid = auth.currentUser.uid;
     if (produit !== "" && prix !== "" && desc !== "") {
       try {
         const docRef = await addDoc(collection(db, "offer"), {
@@ -128,19 +132,11 @@ const Partage = ({ navigation }) => {
     setTable(data.map((doc) => doc.nameProduct));
   };
 
-  useEffect(() => {
-    getProd();
-  }, []);
-  useEffect(() => {
-    setInTable(data);
-  }, [data]);
-
   const findertaker = (val) => {
     const result = data.find((obj) => {
       return obj.nameProduct === val;
     });
     setMage(result.imgProduct);
-    console.log(mage);
   };
 
   const delfunction = (idtem) => {
@@ -153,6 +149,40 @@ const Partage = ({ navigation }) => {
         console.log(error);
       });
   };
+
+  const getCommands = async () => {
+    const datas = await getCommandsBySeller(uid);
+
+    setCommands(datas);
+
+    let priceFinal = 0;
+    datas.forEach((el) => {
+      priceFinal += parseInt(el.price);
+    });
+    setGlobalPrice(priceFinal);
+  };
+
+  // HOOKS
+  /// USEEFFECT
+  useEffect(() => {
+    getComm();
+  }, []);
+
+  useEffect(() => {
+    setInTabs(dat);
+  }, [dat]);
+
+  useEffect(() => {
+    getProd();
+  }, []);
+
+  useEffect(() => {
+    setInTable(data);
+  }, [data]);
+
+  useEffect(() => {
+    getCommands();
+  }, []);
 
   const renderItem = ({ item }) => {
     return (
@@ -192,7 +222,7 @@ const Partage = ({ navigation }) => {
             setModalVisible(!modalVisible);
           }}
         >
-          <View style={styles.centeredView}>
+          <View>
             <View style={styles.modalView}>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
@@ -200,11 +230,41 @@ const Partage = ({ navigation }) => {
               >
                 <Text style={styles.textStyle}>Fermez</Text>
               </Pressable>
-              <FlatList
-                data={tabs}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-              />
+
+              <View
+                style={{
+                  width: "100%",
+                  marginVertical: 10,
+                }}
+              >
+                <View style={{ padding: 10 }}>
+                  <Text style={{ ...FONTS.body3 }}>
+                    Nombre de Commande Reçu :
+                  </Text>
+
+                  <Text style={{ ...FONTS.h2, marginVertical: 10 }}>
+                    {commands?.length < 10
+                      ? `0${commands?.length}`
+                      : commands?.length}{" "}
+                    Commandes
+                  </Text>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  width: "100%",
+                  marginVertical: 10,
+                }}
+              >
+                <View style={{ padding: 10 }}>
+                  <Text style={{ ...FONTS.body3 }}>Montant à recevoir :</Text>
+
+                  <Text style={{ ...FONTS.h2, marginVertical: 10 }}>
+                    {globalPrice} Fcfa
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
         </Modal>
@@ -248,7 +308,6 @@ const Partage = ({ navigation }) => {
           onSelect={(selectedItem, index) => {
             setProduit(selectedItem);
             findertaker(selectedItem);
-            console.log(produit);
           }}
           buttonTextAfterSelection={(selectedItem, index) => {
             // text represented after item is selected

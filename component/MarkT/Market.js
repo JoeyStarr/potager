@@ -14,6 +14,7 @@ import {
   FlatList,
   ActivityIndicator,
   Alert,
+  StyleSheet,
 } from "react-native";
 
 import FilterModal from "./FilterModal";
@@ -162,6 +163,7 @@ const Product2 = ({ product2, navigation }) => {
 const Market = ({ navigation }) => {
   const dispatch = useDispatch();
   let products = useSelector((store) => store.products);
+  const cart = useSelector((store) => store.cart);
 
   // State for showing Activity indicator during loading data
   const [isLoading, setIsLoading] = React.useState(false);
@@ -219,7 +221,7 @@ const Market = ({ navigation }) => {
     );
   };
 
-    useEffect(() => {
+  useEffect(() => {
     if (search?.length > 0) {
       setIsLoading(true);
       setIsSearching(true);
@@ -247,7 +249,7 @@ const Market = ({ navigation }) => {
     setIsLoading(false);
   };
 
-    useEffect(() => {
+  useEffect(() => {
     getPro();
     getListProd();
   }, []);
@@ -289,13 +291,19 @@ const Market = ({ navigation }) => {
           <Ionic name="arrow-back-outline" size="32" colour="black" />
         </Pressable>
         <Text style={{ fontSize: 22 }}>Marketplace</Text>
-        <Pressable
-          onPress={() => {
-            navigation.navigate("Cart");
-          }}
-        >
-          <Ionic name="basket-outline" size="32" colour="black" />
-        </Pressable>
+        <View>
+          <Pressable
+            onPress={() => {
+              navigation.navigate("Cart");
+            }}
+          >
+            <Ionic name="basket-outline" size="32" colour="black" />
+          </Pressable>
+
+          <View style={styles2.cartBubble}>
+            <Text style={{ color: "white" }}>{cart.length}</Text>
+          </View>
+        </View>
       </View>
       <View style={styles.conteneurSearchBar}>
         <View style={styles.searchBar}>
@@ -410,3 +418,19 @@ const Market = ({ navigation }) => {
 };
 
 export default Market;
+
+const styles2 = StyleSheet.create({
+  cartBubble: {
+    borderWidth: 1,
+    width: 20,
+    height: 20,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
+
+    position: "absolute",
+    top: -10,
+    right: -7,
+    backgroundColor: "black",
+  },
+});
