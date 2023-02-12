@@ -54,7 +54,7 @@ const CreaPotager = ({ navigation }) => {
           PropioNom: propnom,
           PropioNum: propnum,
           ProprioPrenom: propsurnom,
-          owner: hash,
+          owner: "",
           hashPota: hash,
         });
         console.log("Document written with ID: ", docRef.id);

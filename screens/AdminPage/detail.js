@@ -56,8 +56,8 @@ const Details = ({ route, navigation }) => {
             <Ionic name="arrow-back-outline" size="34" colour="black" />
           </Pressable>
           <Text style={{ fontSize: 22 }}>Detail</Text>
-          <Pressable onPress={() => navigation.navigate("Cart")}>
-            <Ionic name="basket-outline" size="34" colour="black" />
+          <Pressable >
+            <Ionic name="basket-outline" size="34" colour="white" />
           </Pressable>
         </View>
         <View style={styles.wimg}>
@@ -85,9 +85,7 @@ const Details = ({ route, navigation }) => {
 
         <Text style={{ fontSize: 18 }}>{data.description}</Text>
       </ScrollView>
-      <Pressable onPress={onPressFunction2(aliment)} style={styles.pressbutt}>
-        <Text style={{ fontSize: 16, color: "white" }}>Supprimer</Text>
-      </Pressable>
+      
     </View>
   );
 };

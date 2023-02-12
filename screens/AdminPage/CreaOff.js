@@ -75,7 +75,7 @@ const CreaOffer = ({ navigation }) => {
     }
 
     const getProd = async () => {
-      const dat = await getDocs(collection(db, "listProduct"));
+      const dat = await getDocs(collection(db, "listAdmin"));
       setData(dat.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     const setInTable = async (data) => {

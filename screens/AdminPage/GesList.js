@@ -47,7 +47,7 @@ const GesList = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const getProd = async () => {
-    const dat = await getDocs(collection(db, "listProduct"));
+    const dat = await getDocs(collection(db, "listAdmin"));
     setData(dat.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
   const setInTable = async (data) => {
@@ -64,7 +64,7 @@ const GesList = ({ navigation }) => {
   console.log(data);
 
   const delfunction = (idtem) => {
-    const docRef = doc(db, "listProduct", idtem);
+    const docRef = doc(db, "listAdmin", idtem);
     Alert.alert("Administration", "Voulez-vous supprimer ce produit", [
       {
         text: "Annuler",

@@ -85,7 +85,7 @@ const Listing = ({ navigation }) => {
   };
 
   const sendProductData = async () => {
-    const docRef = await addDoc(collection(db, "listProduct"), {
+    const docRef = await addDoc(collection(db, "listAdmin"), {
       imgProduct: image,
       nameProduct: name,
     });

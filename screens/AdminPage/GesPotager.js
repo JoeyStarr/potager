@@ -39,9 +39,9 @@ const Item = ({ item, delfunction }) => (
   <View style={styles.boxLine}>
     <View style={styles.line}>
       <View>
-        <Text style={{ fontSize: 13, marginTop: 2 }}>Hash: {item.owner}</Text>
+        <Text style={{ fontSize: 13, marginTop: 2 }}>Hash: {item.hashPota}</Text>
         <Text style={{ fontSize: 14, marginTop: 2 }}>
-          Propietaire: {item.PropioNom} {item.PropioPrenom}
+          Propietaire: {item.PropioNom} {item.ProprioPrenom}
         </Text>
         <Text style={{ fontSize: 14, marginTop: 2 }}>
           Numero: {item.PropioNum}
