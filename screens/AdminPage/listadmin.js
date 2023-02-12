@@ -24,7 +24,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 
-const Item = ({item,delfunction}) => (
+const Item = ({item,delfunction,swifunction}) => (
     <View style={styles.boxLine}>
         <View style={styles.line}>
             <View>
@@ -35,6 +35,7 @@ const Item = ({item,delfunction}) => (
                     trackColor={{false: '#000000', true: '#FFFFF'}}
                     thumbColor={item.defcon ? '#FFFFF' : '#00000'}
                     ios_backgroundColor="#00000"
+                    onValueChange={(item) => swifunction(item.id,item.defcon)}
                     value={item.defcon}
                 />
                 </View>
@@ -87,6 +88,13 @@ const AdminList = ({navigation}) => {
         })
     }
 
+    const swifunction = async(idtem,valdefcon) => {
+        const userRef = doc(db, "users", idtem);
+        await updateDoc(userRef, {
+            defcon: !valdefcon,
+          });
+    }
+
     
     const renderItem = ({item}) => {
     
@@ -94,6 +102,7 @@ const AdminList = ({navigation}) => {
           <Item
             item={item}
             delfunction ={delfunction}
+            swifunction ={swifunction}
             onPress={() => setSelectedId(item.id)}
           />
         );
