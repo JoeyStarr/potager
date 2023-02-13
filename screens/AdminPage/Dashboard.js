@@ -31,7 +31,7 @@ const Dashboard = ({navigation}) => {
       </View>
       <ScrollView style={{width:'100%'}}>
         <View style={styles.Box}>
-          <Text style={{fontSize:28,fontWeight:'400',marginVertical:10}}>Conseil</Text>
+          <Text style={{fontSize:28,fontWeight:'400',marginVertical:5}}>Conseil</Text>
           <View style={styles.cardContainer}>
             <Pressable style={styles.card} onPress={() => navigation.navigate('Conseil')}>
             <ImageBackground source={require('../../assets/images/advice.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
@@ -52,7 +52,7 @@ const Dashboard = ({navigation}) => {
 
 
         <View style={styles.Box}>
-          <Text style={{fontSize:28,fontWeight:'400',marginVertical:10}}>Creation de Potager</Text>
+          <Text style={{fontSize:28,fontWeight:'400',marginVertical:5}}>Creation de Potager</Text>
           <View style={styles.cardContainer}>
             <Pressable style={styles.card} onPress={() => navigation.navigate('Potager')}>
             <ImageBackground source={require('../../assets/images/potaa.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
@@ -72,7 +72,7 @@ const Dashboard = ({navigation}) => {
         </View>
 
         <View style={styles.Box}>
-          <Text style={{fontSize:28,fontWeight:'400',marginVertical:10}}>Publication d'offre</Text>
+          <Text style={{fontSize:28,fontWeight:'400',marginVertical:5}}>Publication d'offre</Text>
           <View style={styles.cardContainer}>
             <Pressable style={styles.card} onPress={() => navigation.navigate('Offer')}>
             <ImageBackground source={require('../../assets/images/offer.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
@@ -92,7 +92,7 @@ const Dashboard = ({navigation}) => {
         </View>
 
         <View style={styles.Box}>
-          <Text style={{fontSize:28,fontWeight:'400',marginVertical:10}}>Liste de produit</Text>
+          <Text style={{fontSize:28,fontWeight:'400',marginVertical:5}}>Liste de produit</Text>
           <View style={styles.cardContainer}>
             <Pressable style={styles.card} onPress={() => navigation.navigate('Listing')}>
             <ImageBackground source={require('../../assets/images/list.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
@@ -112,7 +112,21 @@ const Dashboard = ({navigation}) => {
         </View>
 
         <View style={styles.Box}>
-          <Text style={{fontSize:28,fontWeight:'400',marginVertical:10}}>Créer un nouvel admin</Text>
+          <Text style={{fontSize:28,fontWeight:'400',marginVertical:5}}>Gestion des commandes</Text>
+          <View style={styles.cardContainer}>
+            <Pressable style={styles.cardsp} onPress={() => navigation.navigate('Command')}>
+            <ImageBackground source={require('../../assets/images/com.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
+              <View style={{justifyContent:'center',alignItems:'center',paddingHorizontal:5}}>
+                <Text style={{fontSize:42,color:'white',fontWeight:'600'}}>Gerer</Text>
+              </View>
+            </ImageBackground>
+            </Pressable>
+          </View>
+        </View>
+
+
+        <View style={styles.Box}>
+          <Text style={{fontSize:28,fontWeight:'400',marginVertical:5}}>Créer un nouvel admin</Text>
           <View style={styles.cardContainer}>
             <Pressable style={styles.card} onPress={() => navigation.navigate('New')}>
             <ImageBackground source={require('../../assets/images/user.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
@@ -155,7 +169,7 @@ const styles = StyleSheet.create({
     justifyContent:'space-between'
   },
   Box:{
-    marginVertical:30,
+    marginVertical:15,
     width:'100%',
     paddingHorizontal:10,
     
@@ -170,6 +184,10 @@ const styles = StyleSheet.create({
     borderRadius:10,
     width:150,
     height:180
+  },
+  cardsp:{
+    width:"100%",
+    height:220
   },
   image: {
     flex: 1,

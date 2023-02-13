@@ -24,7 +24,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 
-const Item = ({item,delfunction,swifunction}) => (
+const Item = ({item,delfunction,swifunction,uiid}) => (
     <View style={styles.boxLine}>
         <View style={styles.line}>
             <View>
@@ -35,7 +35,7 @@ const Item = ({item,delfunction,swifunction}) => (
                     trackColor={{false: '#000000', true: '#FFFFF'}}
                     thumbColor={item.defcon ? '#FFFFF' : '#00000'}
                     ios_backgroundColor="#00000"
-                    onValueChange={(item) => swifunction(item.id,item.defcon)}
+                    onValueChange={(item) => swifunction(item)}
                     value={item.defcon}
                 />
                 </View>
@@ -51,6 +51,7 @@ const Item = ({item,delfunction,swifunction}) => (
 
 
 const AdminList = ({navigation}) => {
+    const [isEnabled, setIsEnabled] = useState(false);
     const [data, setData] = useState([]);
     const [data2, setData2] = useState([]);
     const [table, setTable] = useState([]);
@@ -88,11 +89,14 @@ const AdminList = ({navigation}) => {
         })
     }
 
-    const swifunction = async(idtem,valdefcon) => {
+    const swifunction = async(idtem) => {
+        setIsEnabled(idtem)
+        /*
         const userRef = doc(db, "users", idtem);
         await updateDoc(userRef, {
             defcon: !valdefcon,
-          });
+          }); */
+          console.log(idtem)    
     }
 
     
@@ -103,6 +107,7 @@ const AdminList = ({navigation}) => {
             item={item}
             delfunction ={delfunction}
             swifunction ={swifunction}
+            uiid = {item.id}
             onPress={() => setSelectedId(item.id)}
           />
         );

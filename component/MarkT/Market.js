@@ -205,10 +205,12 @@ const Market = ({ navigation }) => {
 
   const getPro = async () => {
     setIsLoading(true);
-    const dat = await getDocs(collection(db, "product"));
+    const dat = await getDocs(collection(db, "offer"));
     setData(dat.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     setIsLoading(false);
   };
+
+  console.log(data)
 
   const handleSearch = (textSearch, arrayProducts) => {
     const newArr = arrayProducts.filter((product) =>
