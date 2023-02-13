@@ -14,6 +14,8 @@ import GesPotager from "../../screens/AdminPage/GesPotager";
 import NewAdmin from "../../screens/AdminPage/newadmin";
 import AdminList from "../../screens/AdminPage/listadmin";
 import Details from "../../screens/AdminPage/detail";
+import Command from "../../screens/AdminPage/Command";
+import CmdForUser from "../../screens/AdminPage/cmdforuser";
 
 const AdminStack = () => {
   const Stack = createNativeStackNavigator();
@@ -40,6 +42,9 @@ const AdminStack = () => {
         <Stack.Screen name="AdminList" component={AdminList}/>
 
         <Stack.Screen name="Detail" component={Details}/>
+
+        <Stack.Screen name="Command" component={Command}/>
+        <Stack.Screen name="Foruser" component={CmdForUser}/>  
       </Stack.Navigator>
     </NavigationContainer>
   );

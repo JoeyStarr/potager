@@ -50,9 +50,9 @@ const CreaPotager = ({ navigation }) => {
     ) {
       try {
         const docRef = await addDoc(collection(db, "potager"), {
-          PropioEmail: propmail,
-          PropioNom: propnom,
-          PropioNum: propnum,
+          ProprioEmail: propmail,
+          ProprioNom: propnom,
+          ProprioNum: propnum,
           ProprioPrenom: propsurnom,
           owner: "",
           hashPota: hash,
