@@ -114,7 +114,7 @@ const Dashboard = ({navigation}) => {
         <View style={styles.Box}>
           <Text style={{fontSize:28,fontWeight:'400',marginVertical:5}}>Gestion des commandes</Text>
           <View style={styles.cardContainer}>
-            <Pressable style={styles.cardsp} onPress={() => navigation.navigate('Command')}>
+            <Pressable style={styles.cardsp} onPress={() => navigation.navigate('Users')}>
             <ImageBackground source={require('../../assets/images/com.jpg')} resizeMode="cover" style={styles.image} imageStyle={{ borderRadius: 6}}>
               <View style={{justifyContent:'center',alignItems:'center',paddingHorizontal:5}}>
                 <Text style={{fontSize:42,color:'white',fontWeight:'600'}}>Gerer</Text>

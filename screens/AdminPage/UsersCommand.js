@@ -36,7 +36,7 @@ const windowHeight = Dimensions.get("window").height;
 
 // Advice Calls
 import { getAllAdvices, deleteAdvice } from "../../firebase/adviceCalls";
-const Command = ({ navigation }) => {
+const Userrs = ({ navigation }) => {
   const [advices, setAdvices] = useState(null);
   const [search, setSearch] = useState("");
   const [dataProducts, setDataProducts] = React.useState(null);
@@ -75,6 +75,26 @@ const Command = ({ navigation }) => {
 
   console.log(advices)
 
+  useEffect(() => {
+    if (search?.length > 0) {
+      setIsLoading(true);
+      setIsSearching(true);
+      const dataFiltered = handleSearch(search, products);
+      setData(null);
+      setDataProducts(dataFiltered);
+      setIsLoading(false);
+    } else {
+      setIsSearching(false);
+      setDataProducts(products);
+    }
+  }, [search]);
+
+  const onApply = () => {
+    const dataFiltered = handleSearch(search, products);
+    setData(null);
+    setDataProducts(dataFiltered);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.head}>
@@ -92,7 +112,7 @@ const Command = ({ navigation }) => {
           <TextInput
             style={styles.input2}
             placeholder="Search"
-            placeholderTextColor="#FFFFFF"
+            placeholderTextColor="grey"
             onChangeText={setSearch}
             value={search}
           />
@@ -193,7 +213,7 @@ const renderAdvice = ({ advice, navigation }) => {
     </View>
   );
 };
-export default Command;
+export default Userrs;
 
 const styles = StyleSheet.create({
   container: {

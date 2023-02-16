@@ -14,7 +14,7 @@ import GesPotager from "../../screens/AdminPage/GesPotager";
 import NewAdmin from "../../screens/AdminPage/newadmin";
 import AdminList from "../../screens/AdminPage/listadmin";
 import Details from "../../screens/AdminPage/detail";
-import Command from "../../screens/AdminPage/Command";
+import Userrs from "../../screens/AdminPage/UsersCommand";
 import CmdForUser from "../../screens/AdminPage/cmdforuser";
 
 const AdminStack = () => {
@@ -43,7 +43,7 @@ const AdminStack = () => {
 
         <Stack.Screen name="Detail" component={Details}/>
 
-        <Stack.Screen name="Command" component={Command}/>
+        <Stack.Screen name="Users" component={Userrs}/>
         <Stack.Screen name="Foruser" component={CmdForUser}/>  
       </Stack.Navigator>
     </NavigationContainer>
