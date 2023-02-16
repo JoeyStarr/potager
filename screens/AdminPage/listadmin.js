@@ -42,7 +42,7 @@ const Item = ({item,delfunction,swifunction,uiid}) => (
                 <Text style={{fontSize:14,marginTop:2}}>Pseudo: {item.pseudo}</Text>
             </View>
             <Pressable onPress={(item) => delfunction(item.id)} style={{backgroundColor:"black",borderRadius:"50%",padding:10}}>
-                <Ionic name="trash-outline" size="38" color="white" />
+                <Ionic name="trash-outline" size={38} color="white" />
             </Pressable>
         </View>
     </View>
@@ -118,11 +118,11 @@ const AdminList = ({navigation}) => {
         <View style={styles.container}>
             <View style={styles.head}>
                 <Pressable onPress={() => navigation.navigate('Dashboard')}>
-                    <Ionic name="arrow-back-outline" size="38" color="black" />
+                    <Ionic name="arrow-back-outline" size={38} color="black" />
                 </Pressable> 
                 <Text style={{fontSize:28,fontWeight:'400'}}>Retour</Text>
                 <Pressable onPress={() => navigation.navigate('Dashboard')}>
-                    <Ionic name="arrow-back-outline" size="38" color="#F5F5F5" />
+                    <Ionic name="arrow-back-outline" size={38} color="#F5F5F5" />
                 </Pressable> 
              </View>
              <FlatList

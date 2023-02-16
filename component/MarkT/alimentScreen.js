@@ -52,11 +52,11 @@ const Aliment = ({ route, navigation }) => {
               navigation.goBack();
             }}
           >
-            <Ionic name="arrow-back-outline" size="34" colour="black" />
+            <Ionic name="arrow-back-outline" size={34} colour="black" />
           </Pressable>
           <Text style={{ fontSize: 22 }}>Detail</Text>
           <Pressable onPress={() => navigation.navigate("Cart")}>
-            <Ionic name="basket-outline" size="34" colour="black" />
+            <Ionic name="basket-outline" size={34} colour="black" />
           </Pressable>
         </View>
         <View style={styles.wimg}>

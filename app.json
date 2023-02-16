@@ -4,6 +4,11 @@
     "slug": "MyReactNative",
     "version": "1.0.0",
     "assetBundlePatterns": ["**/*"],
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "ios": {
       "infoPlist": {
         "UIBackgroundModes": ["audio"]

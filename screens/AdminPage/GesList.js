@@ -35,7 +35,7 @@ const Item = ({ item, delfunction }) => (
       />
       <Text style={{ fontSize: 24 }}>{item.nameProduct}</Text>
       <Pressable onPress={() => delfunction(item.id)}>
-        <Ionic name="trash-outline" size="38" color="black" />
+        <Ionic name="trash-outline" size={38} color="black" />
       </Pressable>
     </View>
   </View>
@@ -115,11 +115,11 @@ const GesList = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.head}>
         <Pressable onPress={() => navigation.navigate("Dashboard")}>
-          <Ionic name="arrow-back-outline" size="38" color="black" />
+          <Ionic name="arrow-back-outline" size={38} color="black" />
         </Pressable>
         <Text style={{ fontSize: 28, fontWeight: "400" }}>Retour</Text>
         <Pressable onPress={() => navigation.navigate("Dashboard")}>
-          <Ionic name="arrow-back-outline" size="38" color="#F5F5F5" />
+          <Ionic name="arrow-back-outline" size={38} color="#F5F5F5" />
         </Pressable>
       </View>
       <FlatList

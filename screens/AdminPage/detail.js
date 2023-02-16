@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../../style";
 import Ionic from "react-native-vector-icons/Ionicons";
 import { db } from "../../config/firebase";
@@ -14,36 +14,37 @@ import { addToCart } from "../../store/actions/cartAction";
 import { useToast } from "react-native-toast-notifications";
 
 const Details = ({ route, navigation }) => {
-  const [data,setData] = useState([])
+  const [data, setData] = useState([]);
   const dispatch = useDispatch();
   const toast = useToast();
 
   const [aliment, setAliment] = useState(route.params.itemId);
   const onPressFunction2 = (id) =>
-  Alert.alert('Alert Title', 'My Alert Msg', [
-    {
-      text: 'Cancel',
-      onPress: () => console.log('Cancel Pressed'),
-      style: 'cancel',
-    },
-    {text: 'OK', onPress: async() => await deleteDoc(doc(db, "offer", id))},
-  ]);
+    Alert.alert("Alert Title", "My Alert Msg", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        onPress: async () => await deleteDoc(doc(db, "offer", id)),
+      },
+    ]);
 
-
-    const getProd = async (aliment) => {
-        const docRef = doc(db, "offer",aliment);
-        try {
-            const docSnap = await getDoc(docRef);
-            setData(docSnap.data());
-        } catch(error) {
-            console.log(error)
-        }
-        
-    };
-    useEffect(() => {
-        getProd(aliment);
-    }, []);
-    console.log(data)
+  const getProd = async (aliment) => {
+    const docRef = doc(db, "offer", aliment);
+    try {
+      const docSnap = await getDoc(docRef);
+      setData(docSnap.data());
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getProd(aliment);
+  }, []);
+  console.log(data);
   return (
     <View style={styles.containerrr}>
       <ScrollView style={{ width: "100%", marginHorizontal: 2, padding: 15 }}>
@@ -53,11 +54,11 @@ const Details = ({ route, navigation }) => {
               navigation.goBack();
             }}
           >
-            <Ionic name="arrow-back-outline" size="34" colour="black" />
+            <Ionic name="arrow-back-outline" size={34} colour="black" />
           </Pressable>
           <Text style={{ fontSize: 22 }}>Detail</Text>
-          <Pressable >
-            <Ionic name="basket-outline" size="34" colour="white" />
+          <Pressable>
+            <Ionic name="basket-outline" size={34} colour="white" />
           </Pressable>
         </View>
         <View style={styles.wimg}>
@@ -85,7 +86,6 @@ const Details = ({ route, navigation }) => {
 
         <Text style={{ fontSize: 18 }}>{data.description}</Text>
       </ScrollView>
-      
     </View>
   );
 };

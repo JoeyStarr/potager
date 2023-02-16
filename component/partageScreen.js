@@ -52,7 +52,7 @@ const Item = ({ item, delfunction, navigation }) => (
         </View>
 
         <Pressable onPress={() => delfunction(item.id)}>
-          <Ionic name="trash-outline" size="38" color="black" />
+          <Ionic name="trash-outline" size={38} color="black" />
         </Pressable>
       </View>
     </Pressable>
@@ -202,7 +202,7 @@ const Partage = ({ navigation }) => {
             navigation.navigate("Accueil");
           }}
         >
-          <Ionic name="arrow-back-outline" size="28" colour="black" />
+          <Ionic name="arrow-back-outline" size={28} colour="black" />
         </Pressable>
         <Text style={{ fontSize: 22 }}>Publier une offre d'achat</Text>
         <Pressable onPress={() => setModalVisible(true)}>
@@ -286,7 +286,7 @@ const Partage = ({ navigation }) => {
                 <Text style={styles.textStyle}>Fermez</Text>
               </Pressable>
               <View>
-                <Ionic name="arrow-back-outline" size="28" colour="black" />
+                <Ionic name="arrow-back-outline" size={28} colour="black" />
               </View>
               <Text
                 style={{
