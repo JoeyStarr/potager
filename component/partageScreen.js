@@ -258,7 +258,7 @@ const Partage = ({ navigation }) => {
                 }}
               >
                 <View style={{ padding: 10 }}>
-                  <Text style={{ ...FONTS.body3 }}>Montant à recevoir :</Text>
+                  <Text style={{ ...FONTS.body3 }}>Montant total estimé :</Text>
 
                   <Text style={{ ...FONTS.h2, marginVertical: 10 }}>
                     {globalPrice} Fcfa
