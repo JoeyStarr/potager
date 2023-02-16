@@ -49,7 +49,7 @@ const Cart = ({ navigation }) => {
               navigation.goBack();
             }}
           >
-            <Ionic name="arrow-back-outline" size="34" colour="black" />
+            <Ionic name="arrow-back-outline" size={34} colour="black" />
           </Pressable>
           <Text style={{ fontSize: 22 }}>Mon Panier</Text>
 
@@ -59,7 +59,7 @@ const Cart = ({ navigation }) => {
                 navigation.navigate("Cart");
               }}
             >
-              <Ionic name="basket-outline" size="32" colour="black" />
+              <Ionic name="basket-outline" size={32} colour="black" />
             </Pressable>
 
             <View style={subStyles.cartBubble}>
@@ -202,7 +202,7 @@ const cartItem = ({ item }) => {
           }}
           onPress={() => increment()}
         >
-          <Ionic name="add" size="24" color="black" />
+          <Ionic name="add" size={24} color="black" />
         </TouchableOpacity>
         <Text>{item?.quantity}</Text>
         <TouchableOpacity
@@ -213,7 +213,7 @@ const cartItem = ({ item }) => {
           }}
           onPress={() => decrement()}
         >
-          <Ionic name="remove-outline" size="24" color="black" />
+          <Ionic name="remove-outline" size={24} color="black" />
         </TouchableOpacity> */}
         <TouchableOpacity
           style={{
@@ -228,7 +228,7 @@ const cartItem = ({ item }) => {
         >
           <Ionic
             name="trash-outline"
-            size="18"
+            size={18}
             color="white"
             style={{ alignSelf: "center" }}
           />

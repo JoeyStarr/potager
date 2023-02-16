@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Ionic from "react-native-vector-icons/Ionicons";
 import {
-    collection,
-    getDocs,
-    query,
-    doc,
-    addDoc,
-    updateDoc,
-    deleteDoc,
+  collection,
+  getDocs,
+  query,
+  doc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import {
@@ -22,10 +22,11 @@ import {
   Alert,
   ScrollView,
   ActivityIndicator,
+  Platform,
 } from "react-native";
 
 // STYLES
-import { FONTS, SIZES } from "../../style/theme";
+import { COLORS, FONTS, SIZES } from "../../style/theme";
 
 // Toast
 import { useToast } from "react-native-toast-notifications";
@@ -35,33 +36,31 @@ const windowHeight = Dimensions.get("window").height;
 
 // Advice Calls
 import { getAllAdvices, deleteAdvice } from "../../firebase/adviceCalls";
-const CmdForUser = ({ navigation,route }) => {
+const CmdForUser = ({ navigation, route }) => {
   const [advices, setAdvices] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const toast = useToast();
 
-
   const getAllAdvices = async () => {
-    const ownerId  = route.params.owner;
+    setIsLoading(true);
+
+    const ownerId = route.params.owner;
     const advices = collection(db, "command");
-  
+
     const q = query(advices);
     const querySnapshot = await getDocs(q);
-  
+
     let datas = [];
     querySnapshot.forEach((doc) => {
-        if(doc.data().idSeller == ownerId){
-            const newData = { ...doc.data(), ref: doc.id };
-            datas.push(newData);
-        }
-      console.log(ownerId)
+      if (doc.data().idSeller == ownerId) {
+        const newData = { ...doc.data(), ref: doc.id };
+        datas.push(newData);
+      }
     });
-  
-    return datas;
-  };
+    setIsLoading(false);
 
-  const deleteAdvice = async () => {
+    return datas;
   };
 
   useEffect(() => {
@@ -73,10 +72,7 @@ const CmdForUser = ({ navigation,route }) => {
   }, []);
 
   function removeAdvice(item) {
-    const imageName = splitNameFromUrl(item.email);
     const docRef = doc(db, "command", item.id);
-    console.log(item.id)
-    //    console.log(imageName);
 
     Alert.alert("Administration", "Voulez-vous supprimer cette commande ?", [
       {
@@ -87,29 +83,29 @@ const CmdForUser = ({ navigation,route }) => {
       {
         text: "OK",
         onPress: async () => {
-            deleteDoc(docRef)
-              .then(() => {
-                console.log("Entire Document has been deleted successfully.");
-              })
-              .catch(() => {
-                console.log(error);
-              });
-  
-            getProd();
-            setIsLoading(false);
-            toast.show("DJIPOTA", {
-              type: "custom_toast",
-              placement: "top",
-              duration: 3000,
-              offset: 30,
-              animationType: "slide-in",
-              data: {
-                title: "Commande supprimé ✨",
-              },
+          deleteDoc(docRef)
+            .then(() => {
+              console.log("Entire Document has been deleted successfully.");
+            })
+            .catch(() => {
+              console.log(error);
             });
-  
-            console.log("Success");
-          },
+
+          getProd();
+          setIsLoading(false);
+          toast.show("DJIPOTA", {
+            type: "custom_toast",
+            placement: "top",
+            duration: 3000,
+            offset: 30,
+            animationType: "slide-in",
+            data: {
+              title: "Commande supprimé ✨",
+            },
+          });
+
+          console.log("Success");
+        },
       },
     ]);
   }
@@ -117,11 +113,13 @@ const CmdForUser = ({ navigation,route }) => {
     <View style={styles.container}>
       <View style={styles.head}>
         <Pressable onPress={() => navigation.navigate("Command")}>
-          <Ionic name="arrow-back-outline" size="38" color="black" />
+          <Ionic name="arrow-back-outline" size={38} color="black" />
         </Pressable>
-        <Text style={{ fontSize: 28, fontWeight: "400" }}>Liste des commandes</Text>
+        <Text style={{ fontSize: 28, fontWeight: "400" }}>
+          Liste des commandes
+        </Text>
         <Pressable onPress={() => navigation.navigate("Dashboard")}>
-          <Ionic name="arrow-back-outline" size="38" color="#F5F5F5" />
+          <Ionic name="arrow-back-outline" size={38} color="#F5F5F5" />
         </Pressable>
       </View>
       <ScrollView style={styles.body}>
@@ -140,23 +138,54 @@ const CmdForUser = ({ navigation,route }) => {
             </View>
           ) : (
             <>
-              {advices?.map((advice) =>
-                renderAdvice({ advice, onPress: () => removeAdvice(advice) })
+              {advices?.length ? (
+                advices?.map((advice) =>
+                  renderAdvice({ advice, onPress: () => removeAdvice(advice) })
+                )
+              ) : (
+                <View style={{ height: 200, justifyContent: "center" }}>
+                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                    Aucune commande
+                  </Text>
+                </View>
               )}
             </>
           )}
         </View>
       </ScrollView>
+      {advices?.length ? (
+        <View
+          style={{
+            borderWidth: 1,
+            width: "100%",
+            padding: SIZES.padding,
+            backgroundColor: COLORS.primaryColor,
+            borderTopLeftRadius: 30,
+            borderTopRightRadius: 30,
+          }}
+        >
+          <Text
+            style={{
+              ...FONTS.h2,
+              color: COLORS.white,
+            }}
+          >
+            Prix Total :
+          </Text>
+
+          <Text
+            style={{
+              ...FONTS.h1,
+              color: COLORS.white,
+              marginVertical: 20,
+            }}
+          >
+            35.000 Fcfa
+          </Text>
+        </View>
+      ) : null}
     </View>
   );
-};
-
-const splitNameFromUrl = (str) => {
-  let name = str.split(".com/o/").pop().split("?alt")[0];
-  if (name[0] === "a") {
-    name = name.slice(10, name.length);
-  }
-  return name;
 };
 
 const renderAdvice = ({ advice, onPress }) => {
@@ -217,7 +246,7 @@ const renderAdvice = ({ advice, onPress }) => {
         }}
         onPress={onPress}
       >
-        <Ionic name="trash-outline" size="25" color="white" />
+        <Ionic name="trash-outline" size={25} color="white" />
       </TouchableOpacity>
     </View>
   );
@@ -232,7 +261,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   head: {
-    marginTop: StatusBar.currentHeight + 35,
+    marginTop: Platform.OS === "ios" ? 35 : 20,
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",

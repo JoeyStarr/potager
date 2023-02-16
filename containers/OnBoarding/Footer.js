@@ -11,6 +11,8 @@ import { SIZES, COLORS, FONTS } from "../../style/index";
 
 import { onboards, icons } from "../../constants";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const Footer = ({
   scrollX,
   flatListRef,
@@ -18,6 +20,18 @@ const Footer = ({
   setCurrentIndex,
   navigation,
 }) => {
+  const start = async () => {
+    try {
+      await AsyncStorage.setItem("@viewedOnboarding", "true");
+      console.log("====================================");
+      console.log("OnBoarding finish");
+      console.log("====================================");
+      navigation.replace("SignIn");
+    } catch (error) {
+      console.log("Error @setItem: ", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* Button */}
@@ -70,7 +84,7 @@ const Footer = ({
               alignItems: "center",
             }}
             onPress={() => {
-              navigation.replace("SignIn");
+              start();
             }}
           >
             <Text
@@ -87,7 +101,7 @@ const Footer = ({
       {Dots(scrollX)}
 
       <View style={{ height: 40 }}>
-        <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
+        <TouchableOpacity onPress={() => start()}>
           <Text
             style={{
               ...FONTS.h3,

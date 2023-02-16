@@ -86,7 +86,7 @@ const Product = ({ product, navigation }) => {
           style={styles.circle}
           onPress={() => addProductToCart(product)}
         >
-          <Ionic name="add-outline" size="22" color="white" />
+          <Ionic name="add-outline" size={22} color="white" />
         </Pressable>
       </View>
     </View>
@@ -153,7 +153,7 @@ const Product2 = ({ product2, navigation }) => {
             addProductToCart(product);
           }}
         >
-          <Ionic name="add-outline" size="22" color="white" />
+          <Ionic name="add-outline" size={22} color="white" />
         </Pressable>
       </View>
     </View>
@@ -210,7 +210,7 @@ const Market = ({ navigation }) => {
     setIsLoading(false);
   };
 
-  console.log(data)
+  console.log(data);
 
   const handleSearch = (textSearch, arrayProducts) => {
     const newArr = arrayProducts.filter((product) =>
@@ -290,7 +290,7 @@ const Market = ({ navigation }) => {
             navigation.navigate("Accueil");
           }}
         >
-          <Ionic name="arrow-back-outline" size="32" colour="black" />
+          <Ionic name="arrow-back-outline" size={32} colour="black" />
         </Pressable>
         <Text style={{ fontSize: 22 }}>Marketplace</Text>
         <View>
@@ -299,7 +299,7 @@ const Market = ({ navigation }) => {
               navigation.navigate("Cart");
             }}
           >
-            <Ionic name="basket-outline" size="32" colour="black" />
+            <Ionic name="basket-outline" size={32} colour="black" />
           </Pressable>
 
           <View style={styles2.cartBubble}>
@@ -309,7 +309,7 @@ const Market = ({ navigation }) => {
       </View>
       <View style={styles.conteneurSearchBar}>
         <View style={styles.searchBar}>
-          <Ionic name="search-outline" size="22" colour="black" />
+          <Ionic name="search-outline" size={22} colour="black" />
           <TextInput
             style={styles.input2}
             placeholder="Search"
@@ -324,7 +324,7 @@ const Market = ({ navigation }) => {
               }
             }}
           >
-            <Ionic name="options-outline" size="22" colour="black" />
+            <Ionic name="options-outline" size={22} colour="black" />
           </Pressable>
         </View>
       </View>
