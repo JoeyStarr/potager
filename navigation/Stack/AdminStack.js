@@ -43,7 +43,7 @@ const AdminStack = () => {
 
         <Stack.Screen name="Detail" component={Details}/>
 
-        <Stack.Screen name="Users" component={Command}/>
+        <Stack.Screen name="Command" component={Command}/>
         <Stack.Screen name="Foruser" component={CmdForUser}/>  
       </Stack.Navigator>
     </NavigationContainer>

@@ -40,6 +40,7 @@ import { getAllAdvices, deleteAdvice } from "../../firebase/adviceCalls";
 const Command = ({ navigation }) => {
   const [advices, setAdvices] = useState(null);
   const [search, setSearch] = useState("");
+  const [data, setData] = useState([{}]);
   const [dataProducts, setDataProducts] = React.useState(null);
   // Search state
   const [isSearching, setIsSearching] = React.useState(false);
@@ -63,18 +64,50 @@ const Command = ({ navigation }) => {
     return datas;
   };
 
-  const deleteAdvice = async () => {
+  const handleSearch = (textSearch, arrayProducts) => {
+    const newArr = arrayProducts.filter((product) =>
+      product?.PropioNom?.toLowerCase().includes(textSearch.toLowerCase())
+    );
+    console.log(newArr)
+    return newArr
+  };
+
+  const onApply = () => {
+    const dataFiltered = handleSearch(search, advices);
+    setData(null);
+    setDataProducts(dataFiltered);
   };
 
   useEffect(() => {
-    if (advices == null) {
+    if (search?.length > 0) {
+      setIsLoading(true);
+      setIsSearching(true);
+      const dataFiltered = handleSearch(search, advices);
+      setData(null);
+      setDataProducts(dataFiltered);
+      setIsLoading(false);
+      console.log(dataProducts)
+    } else {
+      setIsSearching(false);
+      setDataProducts(advices);
+      console.log(dataProducts)
+    }
+  },[search]);
+
+  const deleteAdvice = async () => {
+  };
+
+  useEffect(() =>{
+    setDataProducts(advices);
+  },[advices])
+
+  useEffect(() => {
+    if (dataProducts == null) {
       getAllAdvices().then((data) => {
         setAdvices(data);
       });
     }
-  }, []);
-
-  console.log(advices)
+  },[]);
 
   return (
     <View style={styles.container}>
@@ -124,7 +157,7 @@ const Command = ({ navigation }) => {
             </View>
           ) : (
             <>
-              {advices?.map((advice) =>
+              {dataProducts?.map((advice) =>
                 renderAdvice({ advice, navigation })
               )}
             </>
@@ -189,7 +222,7 @@ const renderAdvice = ({ advice, navigation }) => {
             'owner':advice.owner
         })}
       >
-        <Ionic name="options-outline" size="25" color="white" />
+        <Ionic name="basket-outline" size="25" color="white" />
       </TouchableOpacity>
     </View>
   );

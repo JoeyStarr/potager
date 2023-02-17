@@ -14,6 +14,7 @@ import React from "react";
 import { COLORS, FONTS, SIZES } from "../../style/theme";
 import Ionic from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
+import { getAuth } from "firebase/auth";
 
 // Firebase
 import { collection, addDoc } from "firebase/firestore";
@@ -36,9 +37,10 @@ const Validate = ({ isVisible, setIsVisible, navigation }) => {
   const createCommand = async (item) => {
     console.log(item)
     setIsSending(true);
+    const mail = getAuth().currentUser.email
     try {
       const commandRef = await addDoc(collection(db, "command"), {
-        email: "",
+        email: mail,
         idSeller: item?.idSeller,
         location: location,
         name: name,
