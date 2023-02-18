@@ -71,7 +71,6 @@ export const uploadImage = async (blobFile, fileName) => {
         }
       },
       (error) => {
-        this.setState({ isLoading: false });
         // A full list of error codes is available at
         // https://firebase.google.com/docs/storage/web/handle-errors
         switch (error.code) {
@@ -126,7 +125,6 @@ export const uploadAudio = async (blobFile, fileName) => {
         }
       },
       (error) => {
-        this.setState({ isLoading: false });
         // A full list of error codes is available at
         // https://firebase.google.com/docs/storage/web/handle-errors
         switch (error.code) {

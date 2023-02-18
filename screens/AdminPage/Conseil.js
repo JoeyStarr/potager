@@ -86,6 +86,21 @@ const Conseil = ({ navigation }) => {
     startRotationAnimation(durationMs, rotationDegree);
   }, [durationMs, rotationDegree]);
 
+  // Image Picker Permissions
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== "web") {
+        const { status } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          alert(
+            "Désolé, nous avons besoin d'autorisation pour accéder à vos fichiers."
+          );
+        }
+      }
+    })();
+  }, []);
+
   // FUNCTIONS
   const getBlob = async (uri) => {
     const r = await fetch(uri);

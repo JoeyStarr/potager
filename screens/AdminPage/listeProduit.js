@@ -76,8 +76,9 @@ const Listing = ({ navigation }) => {
       const imageName = imageBlob._data.name;
       console.log(imageName);
       try {
-        const imgUrl = await uploadImage(imageBlob, imageName);
-        setImage(imgUrl);
+        const imgUrl = await uploadImage(imageBlob, imageName).then((data) => {
+          setImage(data);
+        });
       } catch (e) {
         console.error("Error adding document: ", e);
       }
