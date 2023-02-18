@@ -1,78 +1,128 @@
 import React, { useState, useEffect } from "react";
 import Ionic from "react-native-vector-icons/Ionicons";
-import { collection, getDocs, query } from "firebase/firestore";
+import {
+    collection,
+    getDocs,
+    query,
+    doc,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+} from "firebase/firestore";
 import { db } from "../../config/firebase";
 import {
   Text,
   View,
   StyleSheet,
+  StatusBar,
   Pressable,
+  Image,
   TextInput,
   Dimensions,
   TouchableOpacity,
+  Alert,
   ScrollView,
   ActivityIndicator,
-  Platform,
 } from "react-native";
 
 // STYLES
-import { COLORS, FONTS, SIZES } from "../../style/theme";
+import { FONTS, SIZES } from "../../style/theme";
+
+// Toast
+import { useToast } from "react-native-toast-notifications";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-// Command Calls
-import { getCommandsBySeller } from "../../firebase/commandCalls";
+// Advice Calls
+import { getAllAdvices, deleteAdvice } from "../../firebase/adviceCalls";
 
 const Command = ({ navigation }) => {
   const [advices, setAdvices] = useState(null);
   const [search, setSearch] = useState("");
+  const [data, setData] = useState([{}]);
   const [dataProducts, setDataProducts] = React.useState(null);
   // Search state
   const [isSearching, setIsSearching] = React.useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // FUNCTIONS
+  const toast = useToast();
+
+
   const getAllAdvices = async () => {
     const advices = collection(db, "potager");
-
+  
     const q = query(advices);
     const querySnapshot = await getDocs(q);
-
+  
     let datas = [];
     querySnapshot.forEach((doc) => {
       const newData = { ...doc.data(), ref: doc.id };
       datas.push(newData);
     });
-
+  
     return datas;
   };
 
-  // REACT HOOKS
+  const handleSearch = (textSearch, arrayProducts) => {
+    const newArr = arrayProducts.filter((product) =>
+      product?.PropioNom?.toLowerCase().includes(textSearch.toLowerCase())
+    );
+    console.log(newArr)
+    return newArr
+  };
+
+  const onApply = () => {
+    const dataFiltered = handleSearch(search, advices);
+    setData(null);
+    setDataProducts(dataFiltered);
+  };
+
   useEffect(() => {
-    if (advices == null) {
+    if (search?.length > 0) {
+      setIsLoading(true);
+      setIsSearching(true);
+      const dataFiltered = handleSearch(search, advices);
+      setData(null);
+      setDataProducts(dataFiltered);
+      setIsLoading(false);
+      console.log(dataProducts)
+    } else {
+      setIsSearching(false);
+      setDataProducts(advices);
+      console.log(dataProducts)
+    }
+  },[search]);
+
+  const deleteAdvice = async () => {
+  };
+
+  useEffect(() =>{
+    setDataProducts(advices);
+  },[advices])
+
+  useEffect(() => {
+    if (dataProducts == null) {
       getAllAdvices().then((data) => {
         setAdvices(data);
       });
     }
-  }, []);
+  },[]);
 
   return (
     <View style={styles.container}>
       <View style={styles.head}>
         <Pressable onPress={() => navigation.navigate("Dashboard")}>
-          <Ionic name="arrow-back-outline" size={38} color="black" />
+          <Ionic name="arrow-back-outline" size="38" color="black" />
         </Pressable>
-        <Text style={{ fontSize: 28, fontWeight: "400" }}>
-          Liste des utilisateurs
-        </Text>
+        <Text style={{ fontSize: 28, fontWeight: "400" }}>Liste des utilisateurs</Text>
         <Pressable onPress={() => navigation.navigate("Dashboard")}>
-          <Ionic name="arrow-back-outline" size={38} color="#F5F5F5" />
+          <Ionic name="arrow-back-outline" size="38" color="#F5F5F5" />
         </Pressable>
       </View>
       <View style={styles.conteneurSearchBar}>
         <View style={styles.searchBar}>
-          <Ionic name="search-outline" size={22} colour="black" />
+          <Ionic name="search-outline" size="22" colour="black" />
           <TextInput
             style={styles.input2}
             placeholder="Search"
@@ -87,7 +137,7 @@ const Command = ({ navigation }) => {
               }
             }}
           >
-            <Ionic name="options-outline" size={22} colour="black" />
+            <Ionic name="options-outline" size="22" colour="black" />
           </Pressable>
         </View>
       </View>
@@ -107,13 +157,9 @@ const Command = ({ navigation }) => {
             </View>
           ) : (
             <>
-              {advices?.map((advice) => (
-                <RenderUser
-                  advice={advice}
-                  navigation={navigation}
-                  key={advice.ref}
-                />
-              ))}
+              {dataProducts?.map((advice) =>
+                renderAdvice({ advice, navigation })
+              )}
             </>
           )}
         </View>
@@ -122,40 +168,17 @@ const Command = ({ navigation }) => {
   );
 };
 
-const RenderUser = ({ advice, navigation }) => {
-  // STATE
-  const [commands, setCommands] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+const splitNameFromUrl = (str) => {
+  let name = str.split(".com/o/").pop().split("?alt")[0];
+  if (name[0] === "a") {
+    name = name.slice(10, name.length);
+  }
+  return name;
+};
 
-  // FUNCTIONS
-
-  /**
-   *
-   * @param {Number} id
-   */
-  const getCommands = async (id) => {
-    setIsLoading(true);
-    const datas = await getCommandsBySeller(id);
-    setCommands(datas);
-    setIsLoading(false);
-  };
-
-  // REACT HOOKS
-
-  useEffect(() => {
-    getCommands(advice.owner);
-  }, []);
-
+const renderAdvice = ({ advice, navigation }) => {
   return (
-    <TouchableOpacity
-      key={advice.ref}
-      style={styles.adviceContainer}
-      onPress={() =>
-        navigation.navigate("Foruser", {
-          owner: advice.owner,
-        })
-      }
-    >
+    <View key={advice.ref} style={styles.adviceContainer}>
       <View style={{ flex: 1, justifyContent: "center" }}>
         <Text
           style={{
@@ -186,7 +209,7 @@ const RenderUser = ({ advice, navigation }) => {
           {advice.PropioEmail.slice(0, 40) + "..."}
         </Text>
       </View>
-      <View
+      <TouchableOpacity
         style={{
           justifyContent: "center",
           alignItems: "center",
@@ -195,23 +218,13 @@ const RenderUser = ({ advice, navigation }) => {
           padding: 10,
           marginRight: 10,
         }}
+        onPress={() => navigation.navigate('Foruser',{
+            'owner':advice.owner
+        })}
       >
-        {isLoading ? (
-          <ActivityIndicator size="small" />
-        ) : (
-          <Text
-            style={{
-              color: COLORS.white,
-              ...FONTS.h3,
-            }}
-          >
-            {commands?.length > 10
-              ? `${commands?.length}`
-              : `0${commands?.length}`}
-          </Text>
-        )}
-      </View>
-    </TouchableOpacity>
+        <Ionic name="basket-outline" size="25" color="white" />
+      </TouchableOpacity>
+    </View>
   );
 };
 export default Command;
@@ -224,7 +237,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   head: {
-    marginTop: Platform.OS === "ios" ? 35 : 20,
+    marginTop: StatusBar.currentHeight + 35,
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -291,7 +304,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    marginVertical: 20,
+    marginVertical:20,
   },
   searchBar: {
     flexDirection: "row",
@@ -316,5 +329,5 @@ const styles = StyleSheet.create({
     color: "grey",
     borderRadius: 8,
     padding: 10,
-  },
+  }
 });

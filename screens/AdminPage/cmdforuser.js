@@ -38,6 +38,7 @@ const windowHeight = Dimensions.get("window").height;
 import { getAllAdvices, deleteAdvice } from "../../firebase/adviceCalls";
 const CmdForUser = ({ navigation, route }) => {
   const [advices, setAdvices] = useState(null);
+  const [price, setPrice] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const toast = useToast();
@@ -52,10 +53,14 @@ const CmdForUser = ({ navigation, route }) => {
     const querySnapshot = await getDocs(q);
 
     let datas = [];
+    let price = 0;
     querySnapshot.forEach((doc) => {
       if (doc.data().idSeller == ownerId) {
         const newData = { ...doc.data(), ref: doc.id };
+        price += parseFloat(doc.data().price)
         datas.push(newData);
+        setPrice(price)
+        console.log(newData)
       }
     });
     setIsLoading(false);
@@ -63,6 +68,7 @@ const CmdForUser = ({ navigation, route }) => {
     return datas;
   };
 
+  
   useEffect(() => {
     if (advices == null) {
       getAllAdvices().then((data) => {
@@ -72,7 +78,8 @@ const CmdForUser = ({ navigation, route }) => {
   }, []);
 
   function removeAdvice(item) {
-    const docRef = doc(db, "command", item.id);
+    const ref = item.ref
+    const docRef = doc(db, "command",ref);
 
     Alert.alert("Administration", "Voulez-vous supprimer cette commande ?", [
       {
@@ -90,8 +97,9 @@ const CmdForUser = ({ navigation, route }) => {
             .catch(() => {
               console.log(error);
             });
-
-          getProd();
+            await getAllAdvices().then((data) => {
+              setAdvices(data);
+            });
           setIsLoading(false);
           toast.show("DJIPOTA", {
             type: "custom_toast",
@@ -180,7 +188,7 @@ const CmdForUser = ({ navigation, route }) => {
               marginVertical: 20,
             }}
           >
-            35.000 Fcfa
+            {price} Fcfa
           </Text>
         </View>
       ) : null}

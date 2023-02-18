@@ -14,7 +14,7 @@ import GesPotager from "../../screens/AdminPage/GesPotager";
 import NewAdmin from "../../screens/AdminPage/newadmin";
 import AdminList from "../../screens/AdminPage/listadmin";
 import Details from "../../screens/AdminPage/detail";
-import Command from "../../screens/AdminPage/Command";
+import Command from "../../screens/AdminPage/UsersCommand";
 import CmdForUser from "../../screens/AdminPage/cmdforuser";
 
 const AdminStack = () => {
