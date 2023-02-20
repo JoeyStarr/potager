@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import { db } from "../../config/firebase";
 import { storage } from "../../config/firebase";
-import { collection, addDoc, doc, getDocs, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, doc, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
 import Ionic from "react-native-vector-icons/Ionicons";
 import {
   Text,
@@ -19,6 +19,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { useToast } from "react-native-toast-notifications";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -78,35 +79,63 @@ const AdminList = ({navigation}) => {
         setInTable(data2);
       }, [data]);
 
-    console.log(data)
+    const toast = useToast();
 
     const delfunction = (idtem) => {
-        const docRef = doc(db, "listProduct",idtem);
-        deleteDoc(docRef).then(() =>{
-            console.log("Entire Document has been deleted successfully.")
-        }).catch(() => {
-            console.log(error);
-        })
-    }
+        console.log(idtem)
+        const docRef = doc(db, "admin", idtem);
+        Alert.alert("Administration", "Voulez-vous supprimer ce admin", [
+          {
+            text: "Annuler",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          {
+            text: "OK",
+            onPress: async () => {
+              deleteDoc(docRef)
+                .then(() => {
+                  console.log("Entire Document has been deleted successfully.");
+                })
+                .catch(() => {
+                  console.log(error);
+                });
+                getProd();
+                getProd2();
+                toast.show("DJIPOTA", {
+                type: "custom_toast",
+                placement: "top",
+                duration: 2000,
+                offset: 30,
+                animationType: "slide-in",
+                data: {
+                  title: "Produit supprimé ✨",
+                },
+              });
+              console.log("Success");
+            },
+          },
+        ]);
+      };
 
-    const swifunction = async(idtem) => {
+
+    const swifunction = async(idtem,valdefcon) => {
         setIsEnabled(idtem)
-        /*
-        const userRef = doc(db, "users", idtem);
+        const userRef = doc(db, "admin", idtem);
         await updateDoc(userRef, {
             defcon: !valdefcon,
-          }); */
-          console.log(idtem)    
+        });
+        getProd();
+        getProd2();
     }
 
     
     const renderItem = ({item}) => {
-    
         return (
           <Item
             item={item}
-            delfunction ={delfunction}
-            swifunction ={swifunction}
+            delfunction ={() => delfunction(item.id)}
+            swifunction ={() => swifunction(item.id,item.defcon)}
             uiid = {item.id}
             onPress={() => setSelectedId(item.id)}
           />

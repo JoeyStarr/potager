@@ -9,6 +9,7 @@ import {
   getDocs,
   deleteDoc,
 } from "firebase/firestore";
+import { useToast } from "react-native-toast-notifications";
 import Ionic from "react-native-vector-icons/Ionicons";
 import {
   Text,
@@ -63,6 +64,8 @@ const GesList = ({ navigation }) => {
 
   console.log(data);
 
+  const toast = useToast();
+
   const delfunction = (idtem) => {
     const docRef = doc(db, "listAdmin", idtem);
     Alert.alert("Administration", "Voulez-vous supprimer ce produit", [
@@ -83,7 +86,6 @@ const GesList = ({ navigation }) => {
             });
 
           getProd();
-          setIsLoading(false);
           toast.show("DJIPOTA", {
             type: "custom_toast",
             placement: "top",
