@@ -21,7 +21,7 @@ const Advices = ({ isActive, navigation, advices }) => {
 
   const newEstAdvices = advices?.filter(
     (item) =>
-      new Date(new Date().getTime() - 10 * 24 * 60 * 60 * 1000) <=
+      new Date(new Date().getTime() - 360 * 24 * 60 * 60 * 1000) <=
       new Date(advices[0].createdAt.seconds * 1000)
   );
 
