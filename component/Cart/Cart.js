@@ -191,6 +191,21 @@ const cartItem = ({ item }) => {
         >
           {item?.price} Fcfa
         </Text>
+
+        <Text
+          style={{
+            ...FONTS.h3,
+          }}
+        >
+          Qté: {item?.quantity}
+        </Text>
+        <Text
+          style={{
+            ...FONTS.h3,
+          }}
+        >
+          vendeur: {item?.nameSeller}
+        </Text>
       </View>
 
       <View style={subStyles.cartItem__btns}>
@@ -260,7 +275,7 @@ const subStyles = StyleSheet.create({
     elevation: 5,
   },
   cartItem__Img: {
-    height: 80,
+    height: 100,
     width: 80,
     borderRadius: 10,
     overflow: "hidden",

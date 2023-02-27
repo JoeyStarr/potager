@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Ionic from "react-native-vector-icons/Ionicons";
-import {
-    collection,
-    getDocs,
-    query,
-    doc,
-    addDoc,
-    updateDoc,
-    deleteDoc,
-} from "firebase/firestore";
+import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import {
   Text,
@@ -16,7 +8,6 @@ import {
   StyleSheet,
   StatusBar,
   Pressable,
-  Image,
   Modal,
   TextInput,
   Dimensions,
@@ -24,22 +15,19 @@ import {
   Alert,
   ScrollView,
   ActivityIndicator,
-  Button,
 } from "react-native";
 
 // STYLES
-import { FONTS, SIZES } from "../../style/theme";
+import { COLORS, FONTS, SIZES } from "../../style/theme";
 
 // Toast
 import { useToast } from "react-native-toast-notifications";
 
 import Slider from "@react-native-community/slider";
+import { number } from "prop-types";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
-
-// Advice Calls
-import { getAllAdvices, deleteAdvice } from "../../firebase/adviceCalls";
 
 const Command = ({ navigation }) => {
   const [advices, setAdvices] = useState(null);
@@ -47,25 +35,24 @@ const Command = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [data, setData] = useState([{}]);
   const [dataProducts, setDataProducts] = React.useState(null);
+
   // Search state
   const [isSearching, setIsSearching] = React.useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const [modalVisible, setModalVisible] = useState(false);
 
-
   //filter commande
-
-  const [nm,setNm] = useState(null)
-
+  const [nm, setNm] = useState(null);
+  const [filterSelected, setFilterSelected] = useState(0);
   //
 
-  const [range,setRange] = useState('50%')
-  const [sliding,setSliding] = useState('Inactive')
+  const [range, setRange] = useState("50%");
+  const [sliding, setSliding] = useState("Inactive");
+  const [sliceNumber, setSliceNumber] = useState(dataProducts?.length);
 
-  const [taille,setTaille] = useState(null)
+  const [taille, setTaille] = useState(null);
   const toast = useToast();
-
 
   const getAllAdvices = async () => {
     const advices = collection(db, "potager");
@@ -76,37 +63,34 @@ const Command = ({ navigation }) => {
 
     const p = query(donnees);
     const querySnapshot1 = await getDocs(p);
-  
+
     let datas = [];
     querySnapshot.forEach((doc) => {
       let num = 0;
       querySnapshot1.forEach((dc) => {
-        if(dc.data().idSeller === doc.data().owner){
-          num++
+        if (dc.data().idSeller === doc.data().owner) {
+          num++;
         }
-        console.log(dc.data().idSeller," : ",doc.data().owner)
-      })
-      console.log(num)
-      const newData = { ...doc.data(), ref: doc.id, number:num };
+      });
+      const newData = { ...doc.data(), ref: doc.id, number: num };
       datas.push(newData);
     });
-  
+
     return datas;
   };
 
   const getAllDonne = async () => {
     const advices = collection(db, "command");
-  
+
     const q = query(advices);
     const querySnapshot = await getDocs(q);
-  
+
     let datas = [];
     querySnapshot.forEach((doc) => {
-      console.log(doc.data())
       const newData = { ...doc.data(), ref: doc.id };
       datas.push(newData);
     });
-  
+
     return datas;
   };
 
@@ -114,14 +98,81 @@ const Command = ({ navigation }) => {
     const newArr = arrayProducts.filter((product) =>
       product?.PropioNom?.toLowerCase().includes(textSearch.toLowerCase())
     );
-    console.log(newArr)
-    return newArr
+    return newArr;
   };
-  
+
   const onApply = () => {
     const dataFiltered = handleSearch(search, advices);
     setData(null);
     setDataProducts(dataFiltered);
+  };
+
+  const option = () => {
+    setTaille(advices.length);
+    setRange(dataProducts.length);
+
+    setModalVisible(true);
+  };
+
+  // FILTRE PAR NOMBRE DE COMMANDES
+  const filters = [
+    {
+      id: 1,
+      text: "10",
+      value: 10,
+    },
+    {
+      id: 2,
+      text: "20",
+      value: 20,
+    },
+    {
+      id: 3,
+      text: "30",
+      value: 30,
+    },
+    {
+      id: 4,
+      text: "50+",
+      value: 50,
+    },
+  ];
+
+  const slicer = () => {
+    if (sliceNumber === dataProducts?.length) {
+      setDataProducts(dataProducts && [...dataProducts]);
+    } else {
+      setDataProducts([...advices].slice(0, sliceNumber));
+    }
+
+    console.log(dataProducts);
+  };
+
+  const filterCommandsByNumber = (number, idx) => {
+    Alert.alert("Djipota", "Voulez-vous appliquer ce filtre?", [
+      {
+        text: "Annuler",
+        onPress: () => console.log("Cancel pressed"),
+        style: "cancel",
+      },
+      {
+        text: "Oui",
+        onPress: () => {
+          setFilterSelected(idx);
+          setNm(number);
+
+          const dataToSend = [...dataProducts].filter(
+            (item) => item?.number <= number
+          );
+
+          if (number === 50) {
+            setDataProducts(advices);
+          } else {
+            setDataProducts(dataToSend);
+          }
+        },
+      },
+    ]);
   };
 
   useEffect(() => {
@@ -132,48 +183,31 @@ const Command = ({ navigation }) => {
       setData(null);
       setDataProducts(dataFiltered);
       setIsLoading(false);
-      console.log(dataProducts)
     } else {
       setIsSearching(false);
       setDataProducts(advices);
-      console.log(dataProducts)
     }
-  },[search]);
+  }, [search]);
 
-  const deleteAdvice = async () => {
-  };
-
-  useEffect(() =>{
+  useEffect(() => {
     setDataProducts(advices);
-  },[advices])
+  }, [advices]);
+
+  useEffect(() => {
+    slicer();
+  }, [sliceNumber]);
 
   useEffect(() => {
     if (dataProducts == null) {
       getAllAdvices().then((data) => {
         setAdvices(data);
-        setTaille(data.length)
+        setTaille(data.length);
       });
       getAllDonne().then((data) => {
-        setDonne(data)
-      })
+        setDonne(data);
+      });
     }
-  },[]);
-
-  const slicer = (sli) => {
-    getAllAdvices().then((data) => {
-      let dada = data.slice(0,sli)
-      setAdvices(dada);
-    });
-  }
-
-  const option = () => {
-    getAllAdvices().then((data) => {
-      setAdvices(data);
-      setTaille(data.length)
-    });
-    setRange(taille)
-    setModalVisible(true)
-  }
+  }, []);
 
   /*
   useEffect(() => {
@@ -189,14 +223,15 @@ const Command = ({ navigation }) => {
   },[nm])
   */
 
-  console.log(nm)
   return (
     <View style={styles.container}>
       <View style={styles.head}>
         <Pressable onPress={() => navigation.navigate("Dashboard")}>
           <Ionic name="arrow-back-outline" size="38" color="black" />
         </Pressable>
-        <Text style={{ fontSize: 28, fontWeight: "400" }}>Liste des utilisateurs</Text>
+        <Text style={{ fontSize: 28, fontWeight: "400" }}>
+          Liste des utilisateurs
+        </Text>
         <Pressable onPress={() => navigation.navigate("Dashboard")}>
           <Ionic name="arrow-back-outline" size="38" color="#F5F5F5" />
         </Pressable>
@@ -212,7 +247,7 @@ const Command = ({ navigation }) => {
             value={search}
           />
           <Pressable
-          /*
+            /*
             onPress={() => {
               if (search?.length > 0) {
                 setFilterVisible(true);
@@ -230,50 +265,109 @@ const Command = ({ navigation }) => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
+          Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
-        }}>
+        }}
+      >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Pressable
               style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
+              onPress={() => setModalVisible(!modalVisible)}
+            >
               <Text style={styles.textStyle}>Fermer</Text>
             </Pressable>
             <Text style={styles.modalText}>Filter</Text>
-            <Text>{range}</Text>
-            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
+            <Text>Value : {range}</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
               <Text>1</Text>
               <Slider
-                style={{width:250,height:40}}
+                style={{ width: 250, height: 40 }}
                 minimumValue={1}
                 maximumValue={taille}
                 minimumTrackTintColor="tomato"
                 maximumTrackTintColor="#000"
                 thumbTintColor="tomato"
-                value={taille}
+                value={range}
                 step={1}
-                onValueChange={value => setRange(parseInt(value))}
-                onSlidingStart={() => setSliding('Sliding')}
-                onSlidingComplete={(val) => slicer(val)} 
+                onValueChange={(value) => setRange(parseInt(value))}
+                onSlidingStart={() => setSliding("Sliding")}
+                onSlidingComplete={(val) => setSliceNumber(val)}
               />
               <Text>{taille}</Text>
             </View>
             <Text style={styles.modalText}>Filter par nombre de commande</Text>
-            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
-            <Pressable  style={styles.bull} onPress={() => setNm(10)}>
-              <Text>10</Text>
-            </Pressable>
-            <Pressable style={styles.bull} onPress={() => setNm(20)}>
-              <Text>20</Text>
-            </Pressable>
-            <Pressable style={styles.bull} onPress={() => setNm(30)}>
-              <Text>30</Text>
-            </Pressable>
-            <Pressable style={styles.bull} onPress={() => setNm(50)}>
-              <Text>50+</Text>
-            </Pressable>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              {filters?.map((item) => (
+                <Pressable
+                  key={item.id}
+                  disabled={filterSelected === item.id}
+                  style={[
+                    styles.bull,
+                    {
+                      backgroundColor:
+                        filterSelected === item.id ? "black" : "white",
+                    },
+                  ]}
+                  onPress={() => {
+                    filterCommandsByNumber(item.value, item.id);
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: filterSelected === item.id ? "white" : "black",
+                    }}
+                  >
+                    {item.text}
+                  </Text>
+                </Pressable>
+              ))}
             </View>
+
+            {/*    <View
+              style={{
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  width: "80%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderWidth: 1,
+                  marginVertical: 25,
+                  padding: 20,
+                  borderRadius: SIZES.radius,
+                  backgroundColor: COLORS.primaryColor,
+                }}
+                onPress={() => {
+                  setFilterSelected(0);
+                  setModalVisible(false);
+                }}
+              >
+                <Text
+                  style={{
+                    color: COLORS.white,
+                  }}
+                >
+                  Réinitialiser
+                </Text>
+              </TouchableOpacity>
+            </View> */}
           </View>
         </View>
       </Modal>
@@ -302,14 +396,6 @@ const Command = ({ navigation }) => {
       </ScrollView>
     </View>
   );
-};
-
-const splitNameFromUrl = (str) => {
-  let name = str.split(".com/o/").pop().split("?alt")[0];
-  if (name[0] === "a") {
-    name = name.slice(10, name.length);
-  }
-  return name;
 };
 
 const renderAdvice = ({ advice, navigation }) => {
@@ -354,13 +440,15 @@ const renderAdvice = ({ advice, navigation }) => {
           padding: 10,
           marginRight: 10,
         }}
-        onPress={() => navigation.navigate('Foruser',{
-            'owner':advice.owner
-        })}
+        onPress={() =>
+          navigation.navigate("Foruser", {
+            owner: advice.owner,
+          })
+        }
       >
         <Ionic name="basket-outline" size="25" color="white" />
         <View style={styles.cartBubble}>
-            <Text style={{ color: "black" }}>{advice.number}</Text>
+          <Text style={{ color: "black" }}>{advice.number}</Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -443,7 +531,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    marginVertical:20,
+    marginVertical: 20,
   },
   searchBar: {
     flexDirection: "row",
@@ -471,20 +559,20 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     flex: 1,
-    justifyContent:'flex-end',
-    alignItems: 'center',
+    justifyContent: "flex-end",
+    alignItems: "center",
     marginTop: 22,
   },
   modalView: {
     marginTop: 20,
-    width:'100%',
-    height:'60%',
-    bottom:0,
-    backgroundColor: 'white',
+    width: "100%",
+    height: "60%",
+    bottom: 0,
+    backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -499,21 +587,21 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   buttonOpen: {
-    backgroundColor: '#F194FF',
+    backgroundColor: "#F194FF",
   },
   buttonClose: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
   },
   textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
   modalText: {
     marginBottom: 15,
     marginTop: 15,
-    fontSize:22,
-    textAlign: 'center',
+    fontSize: 22,
+    textAlign: "center",
   },
   cartBubble: {
     borderWidth: 1,
@@ -528,11 +616,11 @@ const styles = StyleSheet.create({
     right: -7,
     backgroundColor: "white",
   },
-  bull:{
-    borderWidth:1,
-    borderRadius:10,
-    padding:20,
-    marginHorizontal:5,
-    borderColor:'black'
-  }
+  bull: {
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 20,
+    marginHorizontal: 5,
+    borderColor: "black",
+  },
 });

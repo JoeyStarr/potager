@@ -21,8 +21,13 @@ import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { removeFromCart } from "../../store/actions/cartAction";
 
+// Toast Notification
+import { useToast } from "react-native-toast-notifications";
+
 const Validate = ({ isVisible, setIsVisible, navigation }) => {
   const dispatch = useDispatch();
+  const toast = useToast();
+
   const countCart = useSelector((store) => store.cart.length);
   const cart = useSelector((store) => store.cart);
 
@@ -35,9 +40,9 @@ const Validate = ({ isVisible, setIsVisible, navigation }) => {
   const [isSending, setIsSending] = React.useState(false);
 
   const createCommand = async (item) => {
-    console.log(item)
+    console.log(item);
     setIsSending(true);
-    const mail = getAuth().currentUser.email
+    const mail = getAuth().currentUser.email;
     try {
       const commandRef = await addDoc(collection(db, "command"), {
         email: mail,
@@ -62,11 +67,22 @@ const Validate = ({ isVisible, setIsVisible, navigation }) => {
   };
 
   const validateCommand = () => {
-    cart.forEach((item) => {
-      createCommand(item);
+    cart.forEach(async (item) => {
+      await createCommand(item);
       dispatch(removeFromCart(item?.id));
     });
     setIsVisible(false);
+
+    toast.show("DJIPOTA", {
+      type: "custom_toast",
+      placement: "top",
+      duration: 3000,
+      offset: 30,
+      animationType: "slide-in",
+      data: {
+        title: "Commande validée ! ✨",
+      },
+    });
 
     navigation.replace("Market");
   };
