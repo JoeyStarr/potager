@@ -352,7 +352,7 @@ const Partage = ({ navigation }) => {
                         {globalPrice} Fcfa
                       </Text>
                       <Text style={{ fontSize:14, marginVertical:5 }}>
-                        Veuillez contacter l'admin de Djipota au numero suivant : {adminNum}
+                         Contactez la centrale au numero suivant : {adminNum}
                       </Text>
                     </View>
                   </View>
