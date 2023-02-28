@@ -101,6 +101,8 @@ const Command = ({ navigation }) => {
     return newArr;
   };
 
+
+
   const onApply = () => {
     const dataFiltered = handleSearch(search, advices);
     setData(null);
@@ -145,7 +147,6 @@ const Command = ({ navigation }) => {
       setDataProducts([...advices].slice(0, sliceNumber));
     }
 
-    console.log(dataProducts);
   };
 
   const filterCommandsByNumber = (number, idx) => {
@@ -199,7 +200,9 @@ const Command = ({ navigation }) => {
 
   useEffect(() => {
     if (dataProducts == null) {
-      getAllAdvices().then((data) => {
+      getAllAdvices().then((dada) => {
+        //trie par ordre decroissant 
+        const data = dada.sort((a,b) => {return b.number - a.number})
         setAdvices(data);
         setTaille(data.length);
       });
