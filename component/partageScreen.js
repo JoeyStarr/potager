@@ -7,6 +7,7 @@ import {
   collection,
   addDoc,
   doc,
+  getDoc,
   getDocs,
   deleteDoc,
 } from "firebase/firestore";
@@ -85,6 +86,11 @@ const Partage = ({ navigation }) => {
   const [table, setTable] = useState([]);
   const [globalPrice, setGlobalPrice] = useState(0);
 
+
+  //admin user
+  const [adminNum,setAdminNum] = useState(null)
+  //
+
   const [dat, setDat] = useState([]);
   const [tabs, setTabs] = useState([]);
 
@@ -140,6 +146,20 @@ const Partage = ({ navigation }) => {
     setData(dat.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
+
+  const getNumAd = async () => {
+    const docRef = doc(db, "numeroAdmin", "numberAd");
+    const docSnap = await getDoc(docRef);
+    try {
+      const docSnap = await getDoc(docRef);
+      setAdminNum(docSnap.data().numero)
+    } 
+    catch(error) 
+    {       
+      console.log(error)
+    }
+  };
+
   const setInTable = async (data) => {
     setTable(data.map((doc) => doc.nameProduct));
   };
@@ -193,6 +213,7 @@ const Partage = ({ navigation }) => {
   }, [data]);
 
   useEffect(() => {
+    getNumAd()
     getCommands();
   }, []);
 
@@ -329,6 +350,9 @@ const Partage = ({ navigation }) => {
 
                       <Text style={{ ...FONTS.h2, marginVertical: 10 }}>
                         {globalPrice} Fcfa
+                      </Text>
+                      <Text style={{ fontSize:14, marginVertical:5 }}>
+                        Veuillez contacter l'admin de Djipota au numero suivant : {adminNum}
                       </Text>
                     </View>
                   </View>
