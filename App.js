@@ -29,6 +29,9 @@ export default function App() {
     "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
     "Poppins-SemiBold": require("./assets/fonts/Poppins-SemiBold.ttf"),
     "Poppins-Black": require("./assets/fonts/Poppins-Black.ttf"),
+    "Mynerve-Regular": require("./assets/fonts/Mynerve-Regular.ttf"),
+    "Ubuntu-Regular": require("./assets/fonts/Ubuntu-Regular.ttf"),
+    "Ubuntu-Bold": require("./assets/fonts/Ubuntu-Bold.ttf"),
   });
 
   useEffect(() => {

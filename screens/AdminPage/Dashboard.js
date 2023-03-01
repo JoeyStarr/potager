@@ -11,15 +11,17 @@ import {
 } from "react-native";
 import Ionic from "react-native-vector-icons/Ionicons";
 
+
 import { signOut, getAuth } from "firebase/auth";
 
 const Dashboard = ({ navigation }) => {
   const auth = getAuth();
 
+
   return (
     <View style={styles.container}>
       <View style={styles.Headers}>
-        <Text style={{ fontSize: 32, fontWeight: "700" }}>Djipota Admin</Text>
+        <Text style={{ fontSize: 32, fontWeight: "700",fontFamily:'Ubuntu-Bold' }}>Djipota Admin</Text>
         <Pressable onPress={() => signOut(auth)}>
           <Ionic name="log-out-outline" size={32} color="black" />
         </Pressable>
@@ -27,7 +29,7 @@ const Dashboard = ({ navigation }) => {
 
       <ScrollView style={{ width: "100%" }}>
         <View style={styles.Box}>
-          <Text style={{ fontSize: 28, fontWeight: "400", marginVertical: 5 }}>
+          <Text style={{ fontSize: 28, fontWeight: "400", marginVertical: 5,fontFamily:'Ubuntu-Regular' }}>
             Conseil
           </Text>
           <View style={styles.cardContainer}>
@@ -49,7 +51,7 @@ const Dashboard = ({ navigation }) => {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 42, color: "white", fontWeight: "600" }}
+                    style={{ fontSize: 42, color: "white", fontWeight: "600",fontFamily:'Mynerve-Regular' }}
                   >
                     Creér
                   </Text>
@@ -74,7 +76,7 @@ const Dashboard = ({ navigation }) => {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 42, color: "white", fontWeight: "600" }}
+                    style={{ fontSize: 42, color: "white", fontWeight: "600",fontFamily:'Mynerve-Regular' }}
                   >
                     Gérer
                   </Text>
@@ -85,7 +87,7 @@ const Dashboard = ({ navigation }) => {
         </View>
 
         <View style={styles.Box}>
-          <Text style={{ fontSize: 28, fontWeight: "400", marginVertical: 5 }}>
+          <Text style={{ fontSize: 28, fontWeight: "400", marginVertical: 5,fontFamily:'Ubuntu-Regular' }}>
             Creation de Potager
           </Text>
           <View style={styles.cardContainer}>
@@ -107,7 +109,7 @@ const Dashboard = ({ navigation }) => {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 42, color: "white", fontWeight: "600" }}
+                    style={{ fontSize: 42, color: "white", fontWeight: "600",fontFamily:'Mynerve-Regular' }}
                   >
                     Creér
                   </Text>
@@ -132,7 +134,7 @@ const Dashboard = ({ navigation }) => {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 42, color: "white", fontWeight: "600" }}
+                    style={{ fontSize: 42, color: "white", fontWeight: "600",fontFamily:'Mynerve-Regular' }}
                   >
                     Gérer
                   </Text>
@@ -143,7 +145,7 @@ const Dashboard = ({ navigation }) => {
         </View>
 
         <View style={styles.Box}>
-          <Text style={{ fontSize: 28, fontWeight: "400", marginVertical: 5 }}>
+          <Text style={{ fontSize: 28, fontWeight: "400", marginVertical: 5,fontFamily:'Ubuntu-Regular' }}>
             Publication d'offre
           </Text>
           <View style={styles.cardContainer}>
@@ -165,7 +167,7 @@ const Dashboard = ({ navigation }) => {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 42, color: "white", fontWeight: "600" }}
+                    style={{ fontSize: 42, color: "white", fontWeight: "600",fontFamily:'Mynerve-Regular' }}
                   >
                     Creér
                   </Text>
@@ -190,7 +192,7 @@ const Dashboard = ({ navigation }) => {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 42, color: "white", fontWeight: "600" }}
+                    style={{ fontSize: 42, color: "white", fontWeight: "600",fontFamily:'Mynerve-Regular' }}
                   >
                     Gérer
                   </Text>
@@ -201,7 +203,7 @@ const Dashboard = ({ navigation }) => {
         </View>
 
         <View style={styles.Box}>
-          <Text style={{ fontSize: 28, fontWeight: "400", marginVertical: 5 }}>
+          <Text style={{ fontSize: 28, fontWeight: "400", marginVertical: 5,fontFamily:'Ubuntu-Regular' }}>
             Liste de produit
           </Text>
           <View style={styles.cardContainer}>
@@ -223,7 +225,7 @@ const Dashboard = ({ navigation }) => {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 42, color: "white", fontWeight: "600" }}
+                    style={{ fontSize: 42, color: "white", fontWeight: "600",fontFamily:'Mynerve-Regular' }}
                   >
                     Creér
                   </Text>
@@ -248,7 +250,7 @@ const Dashboard = ({ navigation }) => {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 42, color: "white", fontWeight: "600" }}
+                    style={{ fontSize: 42, color: "white", fontWeight: "600",fontFamily:'Mynerve-Regular' }}
                   >
                     Gérer
                   </Text>
@@ -259,7 +261,7 @@ const Dashboard = ({ navigation }) => {
         </View>
 
         <View style={styles.Box}>
-          <Text style={{ fontSize: 28, fontWeight: "400", marginVertical: 5 }}>
+          <Text style={{ fontSize: 28, fontWeight: "400", marginVertical: 5,fontFamily:'Ubuntu-Regular' }}>
             Gestion des commandes
           </Text>
           <View style={styles.cardContainer}>
@@ -281,7 +283,7 @@ const Dashboard = ({ navigation }) => {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 42, color: "white", fontWeight: "600" }}
+                    style={{ fontSize: 42, color: "white", fontWeight: "600",fontFamily:'Mynerve-Regular' }}
                   >
                     Gerer
                   </Text>
@@ -292,7 +294,7 @@ const Dashboard = ({ navigation }) => {
         </View>
 
         <View style={styles.Box}>
-          <Text style={{ fontSize: 28, fontWeight: "400", marginVertical: 5 }}>
+          <Text style={{ fontSize: 28, fontWeight: "400", marginVertical: 5,fontFamily:'Ubuntu-Regular' }}>
             Créer un nouvel admin
           </Text>
           <View style={styles.cardContainer}>
@@ -314,7 +316,7 @@ const Dashboard = ({ navigation }) => {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 42, color: "white", fontWeight: "600" }}
+                    style={{ fontSize: 42, color: "white", fontWeight: "600",fontFamily:'Mynerve-Regular' }}
                   >
                     Creér
                   </Text>
@@ -339,7 +341,7 @@ const Dashboard = ({ navigation }) => {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 42, color: "white", fontWeight: "600" }}
+                    style={{ fontSize: 42, color: "white", fontWeight: "600" ,fontFamily:'Mynerve-Regular'}}
                   >
                     Gérer
                   </Text>
