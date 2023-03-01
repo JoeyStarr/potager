@@ -180,6 +180,8 @@ const Command = ({ navigation }) => {
         onPress: () => {
           setFilterSelected(idx);
           setNm(number);
+          setSliceNumber(taille)
+
 
           const dataToSend = [...dataProducts].filter(
             (item) => item?.number >= min && item?.number <= number
@@ -194,6 +196,7 @@ const Command = ({ navigation }) => {
           } else {
             setDataProducts(dataToSend);
           }
+
         },
       },
     ]);
