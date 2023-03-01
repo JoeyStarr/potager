@@ -101,8 +101,6 @@ const Command = ({ navigation }) => {
     return newArr;
   };
 
-
-
   const onApply = () => {
     const dataFiltered = handleSearch(search, advices);
     setData(null);
@@ -146,10 +144,31 @@ const Command = ({ navigation }) => {
     } else {
       setDataProducts([...advices].slice(0, sliceNumber));
     }
-
   };
 
   const filterCommandsByNumber = (number, idx) => {
+    let min;
+
+    switch (number) {
+      case 10:
+        min = 0;
+        break;
+
+      case 20:
+        min = 10;
+        break;
+
+      case 30:
+        min = 20;
+        break;
+
+      case 50:
+        min = 30;
+        break;
+
+      default:
+        break;
+    }
     Alert.alert("Djipota", "Voulez-vous appliquer ce filtre?", [
       {
         text: "Annuler",
@@ -163,11 +182,15 @@ const Command = ({ navigation }) => {
           setNm(number);
 
           const dataToSend = [...dataProducts].filter(
-            (item) => item?.number <= number
+            (item) => item?.number >= min && item?.number <= number
+          );
+
+          const dataMax = [...dataProducts].filter(
+            (item) => item?.number >= 50
           );
 
           if (number === 50) {
-            setDataProducts(advices);
+            setDataProducts(dataMax);
           } else {
             setDataProducts(dataToSend);
           }
@@ -200,9 +223,7 @@ const Command = ({ navigation }) => {
 
   useEffect(() => {
     if (dataProducts == null) {
-      getAllAdvices().then((dada) => {
-        //trie par ordre decroissant 
-        const data = dada.sort((a,b) => {return b.number - a.number})
+      getAllAdvices().then((data) => {
         setAdvices(data);
         setTaille(data.length);
       });
@@ -339,7 +360,7 @@ const Command = ({ navigation }) => {
               ))}
             </View>
 
-            {/*    <View
+            <View
               style={{
                 width: "100%",
                 justifyContent: "center",
@@ -359,6 +380,7 @@ const Command = ({ navigation }) => {
                 }}
                 onPress={() => {
                   setFilterSelected(0);
+                  setDataProducts(advices);
                   setModalVisible(false);
                 }}
               >
@@ -370,7 +392,7 @@ const Command = ({ navigation }) => {
                   Réinitialiser
                 </Text>
               </TouchableOpacity>
-            </View> */}
+            </View>
           </View>
         </View>
       </Modal>
