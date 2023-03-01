@@ -226,7 +226,8 @@ const Command = ({ navigation }) => {
 
   useEffect(() => {
     if (dataProducts == null) {
-      getAllAdvices().then((data) => {
+      getAllAdvices().then((dada) => {
+        const data = dada.sort((a,b) =>{return b.number - a.number}) 
         setAdvices(data);
         setTaille(data.length);
       });
