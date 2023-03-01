@@ -45,8 +45,8 @@ const Command = ({ navigation }) => {
   //filter commande
   const [nm, setNm] = useState(null);
   const [filterSelected, setFilterSelected] = useState(0);
-  //
-
+  
+//
   const [range, setRange] = useState("50%");
   const [sliding, setSliding] = useState("Inactive");
   const [sliceNumber, setSliceNumber] = useState(dataProducts?.length);
